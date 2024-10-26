@@ -5,32 +5,35 @@
     </style>
 </head>
 <body width="100%" height="100%" padding="20px" bgcolor="#f0f0f0">
-    <h1>Custom attribute and property for tag: radius, width, height, bgcolor...</h1>
+    <h1 lineAnchor="center">NoCSS.js</h1>
+    <h2 lineAnchor="center">Custom attribute and property for tag: radius, width, height, bgcolor...</h2>
     <h2>Create by tag :</h2>
-    <div radius='5px' width='100px' height='40px' bgcolor='red' color="white" padding="4px" anchor="center" childAnchor="center">DIV1</div>
-    <rect radius='5px' width='100px' height='40px' bgcolor='red' color="white" padding="4px" childAnchor="center">RECT</rect>
+    <div radius='5px' width='400px' height='40px' bgcolor='red' color="white" padding="4px" anchor="center" childAnchor="center">Rect: Anchor in center</div>
+    <rect radius='5px' width='400px' height='40px' bgcolor='red' color="white" padding="4px" childAnchor="center">RECT: child anchor in center</rect>
     <h2>Create by js:</h2>
 </body>
     
 <script>
     // dynamic create tag and set property value.
-    const newDiv = document.createElement('div');
-    //newDiv.style.width  = '80px';
-    //newDiv.style.height = '40px';
-    //newDiv.style.padding = '4px';
-    newDiv.width  = '80px';
-    newDiv.height = '40px';
-    newDiv.padding = '4px';
-    newDiv.innerHTML = "DIV2"
-    newDiv.radius = '5px';
-    newDiv.bgColor = 'blue';
-    newDiv.childAnchor = 'center';
-    document.body.appendChild(newDiv);
+    const div = document.createElement('div');
+    //div.style.width  = '80px';
+    //div.style.height = '40px';
+    //div.style.padding = '4px';
+    div.width  = '80px';
+    div.height = '40px';
+    div.padding = '4px';
+    div.innerHTML = "DIV2"
+    div.radius = '5px';
+    div.bgColor = 'blue';
+    div.childAnchor = 'center';
+    div.color = 'white';
+    div.fontWeight = 'bold';
+    document.body.appendChild(div);
 
     // dynamic change property
     setInterval(()=> {
-        newDiv.bgColor = getRandomColor();
-        newDiv.width = getRandomWidth();
+        div.bgColor = getRandomColor();
+        div.width = getRandomWidth();
     }, 1000);
 
 

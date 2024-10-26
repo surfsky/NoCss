@@ -35,13 +35,13 @@ class NoCss{
             'box', 'radius',  
     
             // position
-            'anchor', 'fixAnchor', 'dock',   
+            'anchor', 'lineAnchor', 'fixAnchor', 'dock', 
     
             // child position
             'childAnchor', 'gridCol',
     
             // theme
-            'theme', 
+            'theme', 'color',
             'bg','bgColor', 'bgImage', 'bgRepeat', 'bgPosition', 'bgSize',
         
             // effect
@@ -126,9 +126,8 @@ class NoCss{
             case 'anchor':            this.setAnchor(ele, newValue, 'absolute'); break;
             case 'fixanchor':         this.setAnchor(ele, newValue, 'fixed'); break;
             case 'dock':              this.setDock(ele, newValue, 'absolute'); break;
-
-            // child anchor
             case 'childanchor':       this.setChildAnchor(ele, newValue); break;
+            case 'lineanchor':        this.setLineAnchor(ele, newValue); break;
 
             // grid
             case 'gridcol':           this.setGridColumn(ele, newValue); break;
@@ -245,6 +244,21 @@ class NoCss{
         return ele;
     }
 
+    /**
+     * Set flow mode line anchor
+     * @param {HTMLElement} ele
+     * @param {string} anchor left|center|right
+    */
+    static setLineAnchor(ele, anchor){
+        var s = ele.style;
+        switch (anchor){
+            case Anchor.L   : s.marginLeft = 0;       break;
+            case Anchor.C   : s.margin = '0 auto';    break;
+            case Anchor.R   : s.marginLeft = 'auto'; s.marginRight = 0; break;
+        }
+        return ele;
+    }
+    
 
     /**
      * Set child anchor
