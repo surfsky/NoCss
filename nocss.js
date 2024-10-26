@@ -251,10 +251,11 @@ class NoCss{
     */
     static setLineAnchor(ele, anchor){
         var s = ele.style;
+        s.display = 'block';
         switch (anchor){
-            case Anchor.L   : s.marginLeft = 0;       break;
-            case Anchor.C   : s.margin = '0 auto';    break;
-            case Anchor.R   : s.marginLeft = 'auto'; s.marginRight = 0; break;
+            case Anchor.L   : s.width='400px'; s.marginLeft = 0;       break;
+            case Anchor.C   : s.width='400px'; s.margin = '0 auto';    break;
+            case Anchor.R   : s.width='400px'; s.marginLeft = 'auto'; s.marginRight = 0; break;
         }
         return ele;
     }

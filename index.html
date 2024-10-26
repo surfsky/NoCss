@@ -5,12 +5,11 @@
     </style>
 </head>
 <body width="100%" height="100%" padding="20px" bgcolor="#f0f0f0">
-    <h1 lineAnchor="center">NoCSS.js</h1>
-    <h2 lineAnchor="center">Custom attribute and property for tag: radius, width, height, bgcolor...</h2>
-    <h2>Create by tag :</h2>
-    <div radius='5px' width='400px' height='40px' bgcolor='red' color="white" padding="4px" anchor="center" childAnchor="center">Rect: Anchor in center</div>
+    <h1 lineAnchor="center" width="200px">NoCSS.js</h1>
+    <h3 lineAnchor="center" width="600px">Write HTML with only attributes, NO CSS anymore.</h3>
+
+    <div radius='5px' width='400px' height='40px' bgcolor='red' color="white" padding="4px" anchor="center" childAnchor="center">DIV: Anchor in center</div>
     <rect radius='5px' width='400px' height='40px' bgcolor='red' color="white" padding="4px" childAnchor="center">RECT: child anchor in center</rect>
-    <h2>Create by js:</h2>
 </body>
     
 <script>
@@ -22,7 +21,7 @@
     div.width  = '80px';
     div.height = '40px';
     div.padding = '4px';
-    div.innerHTML = "DIV2"
+    div.innerHTML = "DIV2: Created by script"
     div.radius = '5px';
     div.bgColor = 'blue';
     div.childAnchor = 'center';
@@ -39,7 +38,7 @@
 
     /**Get random width*/
     function getRandomWidth(){
-        return Math.floor(Math.random() * 200) + 'px';
+        return Math.floor(Math.random() * 400 + 200) + 'px';
     }
 
     /**Get random color */
