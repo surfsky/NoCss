@@ -1,0 +1,51 @@
+<head>
+    <script src="./nocss.js"></script>
+    <style>
+        * {transition: all 0.4s; box-sizing: border-box;}
+    </style>
+</head>
+<body width="100%" height="100%" padding="20px" bgcolor="#f0f0f0">
+    <h1>Custom attribute and property for tag: radius, width, height, bgcolor...</h1>
+    <h2>Create by tag :</h2>
+    <div radius='5px' width='100px' height='40px' bgcolor='red' color="white" padding="4px" anchor="center" childAnchor="center">DIV1</div>
+    <rect radius='5px' width='100px' height='40px' bgcolor='red' color="white" padding="4px" childAnchor="center">RECT</rect>
+    <h2>Create by js:</h2>
+</body>
+    
+<script>
+    // dynamic create tag and set property value.
+    const newDiv = document.createElement('div');
+    //newDiv.style.width  = '80px';
+    //newDiv.style.height = '40px';
+    //newDiv.style.padding = '4px';
+    newDiv.width  = '80px';
+    newDiv.height = '40px';
+    newDiv.padding = '4px';
+    newDiv.innerHTML = "DIV2"
+    newDiv.radius = '5px';
+    newDiv.bgColor = 'blue';
+    newDiv.childAnchor = 'center';
+    document.body.appendChild(newDiv);
+
+    // dynamic change property
+    setInterval(()=> {
+        newDiv.bgColor = getRandomColor();
+        newDiv.width = getRandomWidth();
+    }, 1000);
+
+
+    /**Get random width*/
+    function getRandomWidth(){
+        return Math.floor(Math.random() * 200) + 'px';
+    }
+
+    /**Get random color */
+    function getRandomColor() {
+        const r = Math.floor(Math.random() * 256);
+        const g = Math.floor(Math.random() * 256);
+        const b = Math.floor(Math.random() * 256);
+        return `rgb(${r},${g},${b})`;
+    }
+
+</script>
+    
