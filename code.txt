@@ -1,0 +1,59 @@
+// create observer for dom changing.
+const observer = new MutationObserver((mutationsList, observer) => {
+    for (const mutation of mutationsList) {
+        const ele = mutation.target;
+        if (mutation.type == 'childList'){
+            // when new element created, set it's custom attributes.
+            if (mutation.addedNodes.length > 0){
+                mutation.addedNodes.forEach((node)=>{
+                    if (node instanceof HTMLUnknownElement)
+                        if (node.tagName == 'RECT')
+                        {
+                            // 创建一个新的 Rect 实例
+                            const rectInstance = new Rect();
+
+                            // 复制原始节点的属性到新实例
+                            Array.from(node.attributes).forEach((attr) => {
+                                rectInstance.setAttribute(attr.name, attr.value);
+                            });
+
+                            // 复制原始节点的子节点到新实例
+                            Array.from(node.childNodes).forEach((childNode) => {
+                                rectInstance.appendChild(childNode);
+                            });
+
+                            // 迁移事件绑定
+                            const eventListeners = getEventListeners(node);
+                            for (let eventType in eventListeners) {
+                                eventListeners[eventType].forEach((listener) => {
+                                    rectInstance.addEventListener(eventType, listener);
+                                });
+                            }
+
+                            // 将原始节点替换为新的 Rect 实例
+                            ele.replaceChild(rectInstance, node);
+                        } 
+                });
+            }
+        }
+    }
+});
+observer.observe(document, { attributes: true, childList: true, subtree: true });
+
+// 辅助函数用于获取元素上绑定的所有事件监听器
+function getEventListeners(element) {
+    const listeners = {};
+    const events = element.attributes;
+    for (let i = 0; i < events.length; i++) {
+        const attr = events[i];
+        if (attr.name.startsWith('on')) {
+            const eventType = attr.name.slice(2);
+            const listener = attr.value;
+            if (!listeners[eventType]) {
+                listeners[eventType] = [];
+            }
+            listeners[eventType].push(new Function('event', listener));
+        }
+    }
+    return listeners;
+}

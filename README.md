@@ -17,11 +17,12 @@ see https://surfsky.github.io/nocss/
 
 # Supported attributes
 
-- All css style attributes, eg: color, width, height, opacity...
-- Extension attributes:
+- Traditional css style attributes that can be visited by tag.style.xxx, eg. `tag.style.borderRadius='4px'; `
+
+- Extend attributes that can be directly visited by attribute name. eg. `tag.radius='4px';`. Below is supportted extend attributes:
 
 ``` js
-    //
+    // frequency attributes
     'width', 'height', 'margin', 'padding', 'top', 'left', 'right', 'bottom',
 
     // basic
@@ -31,24 +32,23 @@ see https://surfsky.github.io/nocss/
     'box', 'radius',  
 
     // position
-    'anchor', 'fixAnchor', 'dock',   
+    'anchor', 'fixAnchor', 'childAnchor', 'dock', 
 
-    // child position
-    'childAnchor', 'gridCol',
+    // container's children
+    'gridCol',
 
-    // theme
+    // theme, color, image
     'theme', 
     'bg','bgColor', 'bgImage', 'bgRepeat', 'bgPosition', 'bgSize',
 
     // effect
+    'hoverColor', 'hoverBgColor', 
     'shadow', 'transform', 'rotate', 'scale', 'skew', 'textShadow',
-    'hoverBgColor', 'hoverColor',
 
     // event
     'events', 'click', 'draggable',
 ```
 
-Notice: Extension attributes can be visited by name, eg: `tag.radius='4px';`
 
 # Install
 
