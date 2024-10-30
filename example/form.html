@@ -3,13 +3,11 @@
     <script src="../nocss.js"></script>
 </head>
 <body>
-    <grid anchor="center" width="430px" columns="3">
-        <button themeCls="primary"   click="console.log('button1 ripple');" ripple='true'>button1</button>
-        <button themeCls="secondary" click="" ripple="true">button2</button>
-        <button themeCls="success"   asyncclick="await sleep(2000); alert('button3 asyncclick');">button3</button>
-        <button themeCls="info"      asyncclick="alert('button4')">button4</button>
-        <button themeCls="warning"   click="alert('button5')">button5</button>
-        <button themeCls="danger"    click="alert('button6')">button6</button>
+    <grid anchor="center" width="600px" columns="4">
+        <button themeCls="primary"   click="console.log('button1');" >button1</button>
+        <button themeCls="warning"   click="alert('button2')">button2</button>
+        <button themeCls="info"      asyncclick="alert('button3')">button3</button>
+        <button themeCls="success"   asyncclick="await sleep(2000); alert('button4 asyncclick');">button4</button>
     </grid>
 </body>
 </html>

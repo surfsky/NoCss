@@ -77,3 +77,11 @@ const customNamespace = "http://your-custom-namespace.com";
 // 使用自定义命名空间注册自定义元素
 document.createElementNS(customNamespace, 'rect');
 customElements.define('rectx', RectX, { extends: customNamespace });
+
+
+        //if (ele.style.hasOwnProperty(name)){
+        //    ele.style.setProperty(name, newValue);
+        //    return;
+        //}
+
+        //var styleKeys = Object.keys(ele.style);

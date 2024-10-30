@@ -30,10 +30,7 @@
 
 </script>
 
-<script type="module">
-    import { XTags } from "../bin/xtags-base.js";
-    import { Dialog, MessageBox, Tooltip, Popup } from "../bin/xtags-popup.js";
-
+<script>
     // bind tool tip for all buttom elements.
     //Tooltip.bind('button');               // show div.textContent
     //Tooltip.bind('button', 'tip');        // show div.tip
@@ -61,7 +58,7 @@
         var y = rect.bottom + 4 + 'px';
 
         var pop = await Popup.show('This is content', '200px', '100px',  x, y);
-        await XTags.sleep(1000);
+        await Utils.sleep(1000);
         pop.close();
     }
 
