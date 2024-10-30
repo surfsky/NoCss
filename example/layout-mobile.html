@@ -1,0 +1,43 @@
+<html>
+<head>
+    <script src="../nocss.js"></script>
+</head>
+<body>
+    <!-- fix rects -->
+    <rect bgcolor="lightgreen" hovercolor="lightblue" radius="0px" anchor="topLeft"     childAnchor='topLeft' font="bold 15px arial" click="alert('hello');">
+        topLeft
+    </rect>
+    <rect bgcolor="lightgray"  hovercolor="lightblue" radius="0px" anchor="top"         childAnchor="top"  color="red" fontsize="18px" fontweight="bold" click="toggleDiv()" id="topDiv">
+        top
+    </rect>
+    <rect bgcolor="pink"       hovercolor="lightblue" radius="0px" anchor="topRight"    childAnchor="topRight">topRight</rect>
+    <rect bgcolor="white"      hovercolor="lightblue" radius="0px" anchor="left"        childAnchor="left">left</rect>
+    <rect bgcolor="white"      hovercolor="lightblue" radius="8px" anchor="center"      childAnchor="center">
+        <div>center</div> 
+        <div>vertical align </div>
+    </rect>
+    <rect bgcolor="white"      hovercolor="lightblue" radius="0px" anchor="right"       childAnchor="right">right</rect>
+    <rect bgcolor="white"      hovercolor="lightblue" radius="0px" anchor="bottomLeft"  childAnchor="bottomLeft">bottomLeft</rect>
+    <rect bgcolor="white"      hovercolor="lightblue" radius="0px" anchor="bottom"      childAnchor="bottom">bottom</rect>
+    <rect bgcolor="white"      hovercolor="lightblue" radius="0px" anchor="bottomRight" childAnchor="bottomRight">bottomRight</rect>
+</body>
+</html>
+
+<script>
+    var b = false;
+    function toggleDiv(){
+        var ele = document.getElementById('topDiv');
+        b = !b;
+        if (b){
+            // set root dom's attributes
+            ele.root.style.width = '500px';
+            ele.root.style.top = '100px';
+            ele.root.style.backgroundColor = 'green';
+        }
+        else{
+            ele.root.style.width = '100px';
+            ele.root.style.top = '0px';
+            ele.root.style.backgroundColor = 'pink';
+        }
+    };
+</script>

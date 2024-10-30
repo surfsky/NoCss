@@ -1,0 +1,111 @@
+<head>
+    <script src="../nocss.js"></script>
+    <style>
+        * {transition: all 0.4s; box-sizing: border-box;}
+    </style>
+</head>
+<body width="100%" height="100%" padding="20px" childMargin="0 0 10px 0">
+    <h1 lineAnchor="center" width="200px">NoCSS.js</h1>
+    <small lineAnchor="center" width="600px">Write HTML with only attributes, NO CSS anymore.</small>
+
+    <div radius='5px' width='400px' height='40px' bgcolor='red' color="white" padding="4px" childAnchor="right">DIV: ChildAnchor in right</div>
+    <rect radius='5px' width='400px' height='40px'>RECT: with default border</rect>
+    <rectx radius='5px' width='400px' height='40px'>RECT: with default border</rectx>
+    <circle width='100px'>Circle</circle>
+    <row id='switch' width="400px" height="40px">
+        <rect id='left' width="100px" radius="20px 0 0 20px" border="1px solid #a0a0a0" bg="lightblue" cursor="pointer">Left</rect>
+        <rect id='right' width="100px" radius="0 20px 20px 0" border="1px solid #a0a0a0" bg="" cursor="pointer">Right</rect>
+    </row>
+    <column id='panel' width="400px" height="500px">
+        <rect id="title" width="400px" height="40px" radius="20px 20px 0 0" border="1px solid #a0a0a0" bg="lightblue" hoverColor="red">Title</rect>
+        <rect id='body'  width="400px" height="400px" radius="0 0 20px 20px" border="1px solid #a0a0a0" bg="">Body</rect>
+    </column>
+    <grid columns="3">
+        <rect>1</rect>
+        <rect>2</rect>
+        <rect>3</rect>
+        <rect>4</rect>
+        <rect>5</rect>
+        <rect>6</rect>
+        <rect>7</rect>
+        <rect>8</rect>
+        <rect>9</rect>
+    </grid>
+    <container bgcolor="lightgreen" height="500px">
+        ...
+    </container>
+    <Form>
+        <label>Name</label> <input type="text"></input>
+        <label>Name</label> <input type="text"></input>
+        <label>Name</label> <input type="text"></input>
+        <label>Name</label> <input type="text"></input>
+        <label>Name</label> <input type="text"></input>
+    </form>
+</body>
+    
+<script>
+    //-------------------------------------------
+    // dynamic create tag and set property value.
+    //-------------------------------------------
+    const div = document.createElement('div');
+    //div.style.width  = '80px';
+    //div.style.height = '40px';
+    //div.style.padding = '4px';
+    div.width  = '80px';
+    div.height = '40px';
+    div.padding = '4px';
+    div.innerHTML = "DIV2: Created by script"
+    div.radius = '5px';
+    div.bgColor = 'blue';
+    div.childAnchor = 'center';
+    div.color = 'white';
+    div.fontWeight = 'bold';
+    document.body.appendChild(div);
+
+    // dynamic change property
+    setInterval(()=> {
+        div.bgColor = getRandomColor();
+        div.width = getRandomWidth();
+    }, 1000);
+
+
+    /**Get random width*/
+    function getRandomWidth(){
+        return Math.floor(Math.random() * 400 + 200) + 'px';
+    }
+
+    /**Get random color */
+    function getRandomColor() {
+        const r = Math.floor(Math.random() * 256);
+        const g = Math.floor(Math.random() * 256);
+        const b = Math.floor(Math.random() * 256);
+        return `rgb(${r},${g},${b})`;
+    }
+
+    //-------------------------------------------
+    // switch button
+    //-------------------------------------------
+    var divSwitch = document.getElementById('switch');
+    var divLeft = document.getElementById('left');
+    var divRight = document.getElementById('right');
+    divLeft.addEventListener('click', ()=> setSwitchValue(true));
+    divRight.addEventListener('click', ()=> setSwitchValue(false));
+    function setSwitchValue(b){
+        divSwitch.value = b;
+        divLeft.bgColor = b ? 'lightblue' : 'white';
+        divRight.bgColor = b ? 'white' : 'lightblue';
+    }
+
+    //-------------------------------------------
+    // drop panel
+    //-------------------------------------------
+    var divPanel = document.getElementById('panel');
+    var divTitle = document.getElementById('title');
+    var divBody = document.getElementById('body');
+    divPanel.expanded = true;
+    divTitle.addEventListener('click', ()=> {
+        divPanel.expanded = !divPanel.expanded;
+        divBody.style.height = divPanel.expanded ? '400px' : '100px';
+    });
+</script>
+    

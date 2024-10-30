@@ -1,0 +1,69 @@
+<html>
+<head>
+    <script src="../nocss.js"></script>
+</head>
+<body>
+    <row width="700px" anchor="center" gap="5px">
+        <button click="showDialog()" >Dialog by tag</button>
+        <button click="showDialog2('center')">Dialog center</button>
+        <button click="showDialog2('left')">Dialog left</button>
+        <button click="showDialog2('right')">Dialog right</button>
+        <button click="showDialog2('top')">Dialog top</button>
+        <button click="showDialog2('bottom')">Dialog bottom</button>
+        <button click="showDialog2('fill')">Dialog fill</button>
+        <button click="MessageBox.show('This is message')">MessageBox</button>
+        <button asyncclick="showPopup()" id="buttonPopup">Popup</button>
+        <button click="Toast.show('hello world!')" >Toast</button>
+        <button click="Mask.show(100)" >Mask</button>
+        <button id="buttonTooltip" height="44px" width="" tip="tooltipdata">This is a longlong text to show tooltip</button>
+    </row>
+
+    <dialog id="dlg" minheight="400px" minwidth="300px" shadow="false">
+        <h1>Title</h1>
+        <p>This is body</p>
+        <button click="closeDialog()" anchor="bottom" bottom="16px">Close</button>
+    </dialog>
+</body>
+</html>
+
+<script>
+
+</script>
+
+<script type="module">
+    import { XTags } from "../bin/xtags-base.js";
+    import { Dialog, MessageBox, Tooltip, Popup } from "../bin/xtags-popup.js";
+
+    // bind tool tip for all buttom elements.
+    //Tooltip.bind('button');               // show div.textContent
+    //Tooltip.bind('button', 'tip');        // show div.tip
+    //Tooltip.bind('button', 'style.width');  // show div.style.width
+    //Tooltip.bind('button', 'style.width');  // show div.style.width
+    Tooltip.bind('button', (tag)=> `${tag.offsetLeft}, ${tag.offsetTop} <br>${tag.offsetWidth} x ${tag.offsetHeight}`);  // show with callback
+
+    // show or close dialog. Because module, we have to enject window.xxx() to expose it to page.
+    window.showDialog  = () => document.querySelector('#dlg').show({});
+    window.closeDialog = async () => await document.querySelector('#dlg').close(false);
+    
+    // show dialog with dynamic content
+    window.showDialog2 = function(dock='center') {
+        const dlg = document.createElement('dialog');
+        dlg.content = `<h1>Title</h1><p>hello world! ${new Date().toLocaleString()}</p>`;
+        dlg.setShadow(false);
+        dlg.show({dock: dock});
+    }
+
+    // show popup
+    window.showPopup = async function(){
+        var button = document.querySelector('#buttonPopup');
+        var rect = button.root.getBoundingClientRect();  // get element's viewport bound
+        var x = rect.left + 'px';
+        var y = rect.bottom + 4 + 'px';
+
+        var pop = await Popup.show('This is content', '200px', '100px',  x, y);
+        await XTags.sleep(1000);
+        pop.close();
+    }
+
+
+</script>

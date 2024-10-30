@@ -57,3 +57,23 @@ function getEventListeners(element) {
     }
     return listeners;
 }
+
+
+
+
+
+class RectX extends HTMLElement{
+    constructor() {
+        this.style.width = '100px';
+        this.style.height = '100px';
+        this.style.border = '1px solid red';
+        super();
+    }
+}
+
+// 定义一个自定义命名空间
+const customNamespace = "http://your-custom-namespace.com";
+
+// 使用自定义命名空间注册自定义元素
+document.createElementNS(customNamespace, 'rect');
+customElements.define('rectx', RectX, { extends: customNamespace });

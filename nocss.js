@@ -79,7 +79,49 @@ class Theme{
         //border      : '1px solid #707070',
         radius      : '8px',
     });
+
+    /** Global Theme*/
+    static current = Theme.themeLight;
+
+    /**
+     * Set page theme.
+     * @param {Theme} theme 
+     */
+    static setTheme(theme){
+        this.current = theme;
+        document.body.style.transition = 'all 0.4s';
+        document.body.style.backgroundColor = theme.background;
+        document.body.style.color = theme.text;
+        var tags = Array.from(document.querySelectorAll('*'));
+        tags.forEach(tag => {
+            if (tag.setTheme != undefined){
+              tag.setTheme();
+            }
+        });
+        document.dispatchEvent(new Event('themechanged'));  // send message to document
+    }
+
+    /**
+     * Set theme for background and text color. Other settings will be setted in child class.
+     * @param {HTMLElement} ele 
+     */
+    static setBaseTheme(ele){
+        var t = Theme.current;
+        ele.style.color = t.text;
+        var cls = ele.getAttribute('themeCls');
+        switch (cls){
+            case "primary":   ele.style.backgroundColor = t.primary;     break;
+            case "secondary": ele.style.backgroundColor = t.secondary;   break;
+            case "success":   ele.style.backgroundColor = t.success;     break;
+            case "info":      ele.style.backgroundColor = t.info;        break;
+            case "warning":   ele.style.backgroundColor = t.warning;     break;
+            case "danger":    ele.style.backgroundColor = t.danger;      break;
+            default:          ele.style.backgroundColor = t.background;  break;
+        }
+        return ele;
+    }
 }
+
 
 /************************************************************
  * Utils: sleep, theme, icon, color, px, position....
@@ -232,28 +274,6 @@ class Utils {
             }
         }
     }
-
-    //-----------------------------------------
-    // Theme
-    //-----------------------------------------
-    /** Global Theme*/
-    static theme = Theme.themeLight;
-
-    /**
-     * Set page theme.
-     * @param {Theme} theme 
-     */
-    static setTheme(theme){
-        this.theme = theme;
-        var tags = Array.from(document.querySelectorAll('*'));
-        tags.forEach(tag => {
-            if (tag.setTheme != undefined){
-              tag.setTheme(theme);
-            }
-        });
-        document.dispatchEvent(new Event('themechanged'));  // send message to document
-    }
-
 
 
     //-----------------------------------------
@@ -506,6 +526,8 @@ class NoCss{
         return render;
     }
 
+    // style keys has 638-645 items.
+    static styleKeys = Object.keys(document.createElement('div').style);
 
     /**Set custom attribute value
     * @param {HTMLElement} ele
@@ -513,10 +535,15 @@ class NoCss{
     * @param {string} newValue 
     */
     static setCustomAttribute(ele, name, newValue){
-        if (ele.style.hasOwnProperty(name)){
-            ele.style.setProperty(name, newValue);
-            return;
-        }
+        // set basic style property (support low/high case)
+        this.styleKeys.forEach(k =>{
+            if (k.toLowerCase() == name) {
+                ele.style[k] = newValue;
+                return;
+            }
+        });
+
+        // set extension attribute value
         switch(name.toLowerCase()){
             // rename
             case 'z':                 ele.style.zIndex = newValue; break;
@@ -948,6 +975,7 @@ class Tag{
      * @param {HTMLElement} ele Element parsed by page engine.
     */
     render(ele) {
+        ele.style.transition = 'all 0.4s';
         return ele;
     }
 }
@@ -960,6 +988,9 @@ class Rect extends Tag{
 
     /**@param {HTMLElement} ele */
     render(ele) {
+        super.render(ele);
+        ele.style.width = '100px';
+        ele.style.height = '100px';
         ele.style.border = '1px solid #a0a0a0';
         ele.style.boxSizing = 'border-box';
         ele.style.overflow = 'hidden';
@@ -1008,7 +1039,7 @@ class Row extends Tag {
         ele.style.flexDirection = "row";
         var gap = ele.getAttribute('gap');
         if (gap != null)
-            NoCss.setChildMargin(`0 ${gap} 0 0`);
+            NoCss.setChildMargin(ele, `0 ${gap} 0 0`);
         return ele;
     }
 }
@@ -1030,7 +1061,7 @@ class Column extends Tag {
         ele.style.flexDirection = "column";
         var gap = ele.getAttribute('gap');
         if (gap != null)
-            NoCss.setChildMargin(`0 0 ${gap} 0`);
+            NoCss.setChildMargin(ele, `0 0 ${gap} 0`);
         return ele;
     }
 }
@@ -1176,18 +1207,87 @@ class Container extends Tag {
 }
 
 
-class RectX extends HTMLElement{
-    constructor() {
-        this.style.width = '100px';
-        this.style.height = '100px';
-        this.style.border = '1px solid red';
-        super();
+
+/************************************************************
+ * Button
+ * @example
+ *     <x-btn click='alert("...")' ripple='true'></x-btn>
+ * @description
+ *     - default theme like bootstrap
+ *     - support click disable and become gray
+ ***********************************************************/
+class Button extends Tag {
+    static { NoCss.registCustomTag('Button', new Button()); }
+
+    /**@param {HTMLElement} ele */
+    render(ele) {
+        ele.style.boxSizing = 'border-box';
+        ele.style.transition = 'all 0.5s';  // animation
+        ele.style.padding = "10px";
+        ele.style.overflow = 'hidden';
+        ele.style.borderRadius = "8px";
+        ele.style.borderWidth = "0px";
+        ele.style.height = '44px';
+        ele.style.width = '120px';
+        ele.style.userSelect = 'none';   // can't select button text
+        ele.style.textAlign = 'center';  // horizontal center text
+        NoCss.setHoverOpacity(ele, '0.8');
+
+        // event
+        var click = ele.getAttribute('click');
+        if (click != null) this.setClick(ele, click, false);
+        var asyncClick = ele.getAttribute('asyncClick');
+        if (asyncClick != null) this.setClick(ele, asyncClick, true);
+
+        // theme
+        ele.setTheme = function(){
+            Theme.setBaseTheme(ele);
+            var o = Theme.current;
+            ele.style.borderRadius = o.radius;
+            ele.style.color = o.textLight;
+            if (o.border == null || o.border == ''){
+                var clr = Utils.getDarkerColor(ele.style.backgroundColor, 0.2);
+                ele.style.border = `1px solid ${clr}`;
+            }
+            else{
+                ele.style.border = o.border;
+            }
+        }
+        ele.setTheme();
+        return ele;
+    }
+
+
+    /**
+     * Set click event
+     * @param {function | string} func callback function or string. eg. "alert('hello world');"
+     * @param {boolean} [isAsync=false] Whether the func is async?
+     */
+    setClick(ele, func, isAsync=false) {
+        if (isAsync)
+            ele.addEventListener('click', async (e) => {
+                e.stopPropagation(); // no send event to other
+
+                // disable - eval - enable
+                NoCss.setEnable(ele, false);
+                if (typeof func === 'string')
+                    await eval(`(async () => {${func}})()`);
+                else
+                    await func();
+                NoCss.setEnable(ele, true);
+            });
+        else{
+            ele.addEventListener('click',  (e) => {
+                e.stopPropagation();
+
+                // disable - eval - enable
+                //this.setEnable(false);
+                if (typeof func === 'string')
+                    eval(func);
+                else
+                    func();
+                //this.setEnable(true);
+            });
+        }
     }
 }
-
-// 定义一个自定义命名空间
-const customNamespace = "http://your-custom-namespace.com";
-
-// 使用自定义命名空间注册自定义元素
-document.createElementNS(customNamespace, 'rect');
-customElements.define('rectx', RectX, { extends: customNamespace });

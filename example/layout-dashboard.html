@@ -1,0 +1,44 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/maptalks/dist/maptalks.css">
+    <script type="text/javascript" src="https://unpkg.com/maptalks/dist/maptalks.min.js"></script>    
+    <script src="../nocss.js"></script>
+    <style>
+      html,
+      body,
+      #map {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+</head>
+<body padding="0">
+  <div id="map"></div>
+  <div click='alert(this.id);' id='top'   bgColor="#0000FF60" childanchor="center" dock='top'   height="100px" >Head</div>
+  <column click='alert(this.id);' id='left'  gap='20px' bgColor="#0000FF60" dock='left'  width="200px"  top="100px">
+    <div click='alert(this.id);' id='L1' width="100%" minheight="200px" bgColor="lightgreen"></div>
+    <div click='alert(this.id);' id='L2' width="100%" minheight="200px" bgColor="lightgreen"></div>
+    <div click='alert(this.id);' id='L3' width="100%" minheight="200px" bgColor="lightgreen"></div>
+  </column>
+  <column click='alert(this.id);' id='right' gap='20px' bgColor="#0000FF60" dock='right' width="200px"  top="100px">
+    <tag click='alert(this.id);' id='R1'  width="100%" minheight="200px" bgColor="lightgreen"></tag>
+    <div click='alert(this.id);' id='R2'  width="100%" minheight="200px" bgColor="lightgreen"></div>
+    <rect click='alert(this.id);' id='R3' width="100%" minheight="200px" bgColor="lightgreen"></rect>
+  </column>
+</body>
+</html>
+
+<script>
+  // map
+  var map = new maptalks.Map('map', {
+    center: [-0.113049,51.498568],
+    zoom: 14,
+    baseLayer: new maptalks.TileLayer('base', {
+      urlTemplate: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+      subdomains: ['a','b','c','d'],
+      attribution: '&copy; <a href="http://osm.org">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/">CARTO</a>'
+    })
+  });
+</script>

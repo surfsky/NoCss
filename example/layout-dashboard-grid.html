@@ -1,0 +1,45 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/maptalks/dist/maptalks.css">
+    <script type="text/javascript" src="https://unpkg.com/maptalks/dist/maptalks.min.js"></script>    
+    <script src="../nocss.js"></script>
+    <style>
+      html,
+      body,
+      #map {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+</head>
+<body padding="0">
+  <div id="map"></div>
+  <rect width='200px' bgcolor="lightgreen" click="animate(this)" id="rect1">click to change color</rect>
+  <grid anchor="fill" bgcolor="transparent" 
+    columns='300px auto 300px' rows="200px auto" 
+    gap='10px' padding="10px" bgcolor="#2196F3">
+    <rect childanchor="center" bgcolor="#0000FF60" gridcolumn="1-3"  click="this.style.height=10px;">1</rect>
+    <rect childanchor="center" bgcolor="#0000FF60" gridcolumn="1-1"  click="this.style.width=10px;" >2</rect>
+    <rect childanchor="center" bgcolor="#0000FF60" gridcolumn="3-2"  click="this.style.width=10px;" >3</rect>
+  </grid>
+</body>
+</html>
+
+<script>
+  var map = new maptalks.Map('map', {
+    center: [-0.113049,51.498568],
+    zoom: 14,
+    baseLayer: new maptalks.TileLayer('base', {
+      urlTemplate: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+      subdomains: ['a','b','c','d'],
+      attribution: '&copy; <a href="http://osm.org">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/">CARTO</a>'
+    })
+  });
+
+  function animate(ele){
+      NoCss.animate(ele, ()=> ele.style.backgroundColor = 'red');
+  }
+
+</script>
