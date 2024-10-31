@@ -1,11 +1,10 @@
 ------------------------------------------------------
 task
 ------------------------------------------------------
-/实现button icon 属性：实现扩展属性。
+实现 resize = 'all,t,b,l,r'，就实现了 splitter
+实现 drag = 'all,h,v'
 实现全屏 mask loading 效果
 实现 <StyleAll box='border-box'>
-实现 resize = 'all,t,b,l,r'
-实现 drag = 'all,h,v'
 实现 hoverEffect，把效果写在里面
 
 实现复杂控件
@@ -17,12 +16,13 @@ task
 
 
 剥离扩展控件属性的逻辑，需要给标签附上一个onAttributeChanged(name, newValue)方法
-
+实现扩展属性。如button tag.prototype.__getter(name)
 
 
 ------------------------------------------------------
 done
 ------------------------------------------------------
+/实现button icon 属性：
 /实现所有对象的theme能力，只要设置了themeCls就会上色，此外还会调用自定义的 setTheme() 方法
 /优化<a>
 /增加属性 gridc, gridr, childpadding
