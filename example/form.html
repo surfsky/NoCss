@@ -4,11 +4,11 @@
 </head>
 <body>
     <grid anchor="center" width="600px" columns="4">
-        <button themeCls="primary"   click="console.log('button1');" >button1</button>
+        <button themeCls="primary"   click="Utils.log('button1', 'INFO', 'logger');" >button1</button>
         <button themeCls="warning"   click="alert('button2')">button2</button>
-        <button themeCls="info"      asyncclick="alert('button3')">button3</button>
-        <button themeCls="success"   asyncclick="await sleep(2000); alert('button4 asyncclick');">button4</button>
+        <button themeCls="success"   asyncclick="await sleep(2000); Utils.log('button3', 'INFO', 'logger');">button3</button>
     </grid>
+    <div id="logger"></div>
 </body>
 </html>
 <script>

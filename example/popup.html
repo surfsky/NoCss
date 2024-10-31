@@ -3,7 +3,7 @@
     <script src="../nocss.js"></script>
 </head>
 <body>
-    <row width="700px" anchor="center" gap="5px">
+    <row width="100%" anchor="center" gap="5px">
         <button click="showDialog()" >Dialog by tag</button>
         <button click="showDialog2('center')">Dialog center</button>
         <button click="showDialog2('left')">Dialog left</button>
@@ -18,7 +18,7 @@
         <button id="buttonTooltip" height="44px" width="" tip="tooltipdata">This is a longlong text to show tooltip</button>
     </row>
 
-    <dialog id="dlg" minheight="400px" minwidth="300px" shadow="false">
+    <dialog id="dlg" minheight="400px" minwidth="300px" shadow="true" radius="10px" border="1px solid #a0a0a0">
         <h1>Title</h1>
         <p>This is body</p>
         <button click="closeDialog()" anchor="bottom" bottom="16px">Close</button>

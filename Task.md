@@ -1,16 +1,13 @@
 ------------------------------------------------------
 task
 ------------------------------------------------------
-bug
-    click传递的this有问题，见 animate.html
-    gridcolumn 有问题
+实现全屏 mask loading 效果
+实现 hoverEffect，把效果写在里面
+实现 StyleInit
     
-迁移
-    实现 StyleInit
-    实现 icon
-    实现 icona
 
 实现复杂控件
+    实现dialog
     实现 panel
     实现 switch
     动态创建的对象中的子对象解析有问题，如<toast.row>
@@ -24,6 +21,13 @@ bug
 ------------------------------------------------------
 done
 ------------------------------------------------------
+/实现所有对象的theme能力，只要设置了themeCls就会上色，此外还会调用自定义的 setTheme() 方法
+/优化<a>
+/增加属性 gridc, gridr, childpadding
+/实现 icon
+/实现 icona
+/click传递的this有问题，见 animate.html
+/gridcolumn 有问题
 /img.icon
 /click 统一处理。
 /toast

@@ -85,3 +85,30 @@ customElements.define('rectx', RectX, { extends: customNamespace });
         //}
 
         //var styleKeys = Object.keys(ele.style);
+
+
+              <row height='100%' width='400px'>
+                <img src='${Utils.getIconUrl(icon)}' width='20px' height='20px'/>&nbsp;
+                <div>${text}<div>
+              </row>
+
+                      ele.linkTag = document.createElement('link');
+        ele.linkTag.rel = 'stylesheet';
+        ele.linkTag.href = Utils.iconFontRoot + "iconfont.css";
+        document.head.appendChild(ele.linkTag);
+
+
+        ele.id = this.getId(ele);
+        if (ele.styleTag == null)
+            ele.styleTag = document.createElement('style');
+        ele.styleTag.textContent = `#${ele.id} > *  {margin: ${val} }`;
+        this.saveStyle(ele);
+
+    /** Set children margin 
+     * @param {HTMLElement} ele 
+     * @param {string} val css number. eg. 10px, 1em, 1rem
+    */
+    static setChildMargin(ele, val){
+        this.setChildStyle(ele, 'margin', val);
+    }
+

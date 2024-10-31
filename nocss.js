@@ -90,27 +90,48 @@ class Theme{
      */
     static setTheme(theme){
         this.current = theme;
-        document.body.style.transition = 'all 0.4s';
-        document.body.style.backgroundColor = theme.background;
-        document.body.style.color = theme.text;
-        var tags = Array.from(document.querySelectorAll('*'));
-        tags.forEach(tag => {
-            if (tag.setTheme != undefined){
-              tag.setTheme();
+        //document.body.style.transition = 'all 0.4s';
+        //document.body.style.backgroundColor = theme.background;
+        //document.body.style.color = theme.text;
+        var eles = Array.from(document.querySelectorAll('*'));
+        eles.forEach(ele => {
+            if (ele instanceof HTMLElement){
+                this.setBaseTheme(ele);
+                if (ele.setTheme != undefined)
+                  ele.setTheme();
             }
         });
         document.dispatchEvent(new Event('themechanged'));  // send message to document
     }
 
     /**
+     * Set element theme.
+     * @param {HTMLElement} ele 
+     * @param {Theme} theme 
+     */
+    static setThemeCls(ele, themeCls){
+        this.setBaseTheme(ele, themeCls);
+        if (ele.setTheme != undefined){
+            ele.setTheme();
+        }
+    }
+
+
+    /**
      * Set theme for background and text color. Other settings will be setted in child class.
      * @param {HTMLElement} ele 
      */
-    static setBaseTheme(ele){
+    static setBaseTheme(ele, themeCls=null){
+        if (themeCls == null)
+            themeCls = ele.getAttribute('themeCls');
+        if (themeCls == null)
+            return;
+
         var t = Theme.current;
+        ele.style.transition = 'all 0.4s';
         ele.style.color = t.text;
-        var cls = ele.getAttribute('themeCls');
-        switch (cls){
+        switch (themeCls){
+            case "bg":        ele.style.backgroundColor = t.background;  break;
             case "primary":   ele.style.backgroundColor = t.primary;     break;
             case "secondary": ele.style.backgroundColor = t.secondary;   break;
             case "success":   ele.style.backgroundColor = t.success;     break;
@@ -131,6 +152,50 @@ class Utils {
     /** Icon root path*/
     static iconRoot = "../img/";
     static iconFontRoot = '../iconfont/';
+
+
+    //-----------------------------------------
+    // Log
+    //-----------------------------------------
+    /** Write log in container
+     * @param (string) msg
+     * @param (string) containerId Log container's id
+     * @param (string) lvl  Message level: INFO, WARN, ERROR
+     * @param (string) format Default : [{date}] {level} : {message}
+    */
+    static log(msg='', lvl='INFO', containerId='', format='[{date}] {level} : {message}'){
+        // text
+        if (format != ''){
+            var dt = new Date();
+            var dt = dt.toLocaleDateString() + ' ' + dt.toLocaleTimeString();
+            msg = format
+                .replace('{date}', dt)
+                .replace('{level}', lvl)
+                .replace('{message}', msg)
+                ;
+        }
+
+        // element
+        var ele = document.createElement('div');
+        ele.innerHTML = msg;
+        ele.style.display = 'block';
+        if (lvl == 'WARN')  ele.style.color = 'orange';
+        if (lvl == 'ERROR') ele.style.color = 'red';
+
+        // container
+        var container = document.body;
+        if (containerId != '')
+            container = document.getElementById(containerId);
+        container.appendChild(ele);
+    }
+
+    /**Clear logs */
+    static clearLog(containerId){
+        var container = document.body;
+        if (containerId != '')
+            container = document.getElementById(containerId);
+        container.innerHTML = '';
+    }
 
 
     //-----------------------------------------
@@ -165,25 +230,35 @@ class Utils {
         return Date.now().toString(36) + Math.random().toString(36).substring(2);
     }
 
-    /**HtmlEncode */
+    /**HtmlEncode string to & lt; & gt;...
+     * @param {string} code 
+    */
     static htmlEncode(code) {
+        //return code.replace(/[<>&"']/g, function(match) {
         return code.replace(/[<>]/g, function(match) {
             switch (match) {
                 case '<':   return '&lt;';
                 case '>':   return '&gt;';
+                //case '&':   return '&amp;';
+                //case '"':   return '&quot;';
+                //case "'":   return '&#39;';
             }
         });
-        //return code.replace(/[<>&"']/g, function(match) {
-        //    switch (match) {
-        //        case '<':   return '&lt;';
-        //        case '>':   return '&gt;';
-        //        case '&':   return '&amp;';
-        //        case '"':   return '&quot;';
-        //        case "'":   return '&#39;';
-        //    }
-        //});
     }
-  
+
+    /**HtmlDecode string to <>&'"
+     * @param {string} code 
+    */
+    static htmlDecode(code) {
+        return code
+            .replace('&lt;',   '<')
+            .replace('&gt;',   '>')
+            .replace('&amp;',  '&')
+            .replace('&quot;', '"')
+            .replace('&#39;',  "'")
+            ;
+    }
+    
 
     //-----------------------------------------
     // DOM
@@ -210,7 +285,36 @@ class Utils {
         return doc.body.firstChild;
     }
 
+    /**Insert link and check link whether exists 
+     * @param {string} href 
+    */
+    static addLink(href) {
+        if (!this.isLinkExist(href)) {
+            const link = document.createElement('link');
+            link.setAttribute('rel', 'stylesheet');
+            link.setAttribute('href', href);
+            document.head.appendChild(link);
+        }
+    }
 
+    /**Check link whether exists 
+     * @param {string} href 
+    */
+    static isLinkExist(href) {
+        const links = document.getElementsByTagName('link');
+        for (let i = 0; i < links.length; i++) {
+            if (links[i].getAttribute('href') === href) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+    //-----------------------------------------
+    // DOM Calculate
+    //-----------------------------------------
     /** Get view width */
     static get viewWidth() { return  window.innerWidth || document.documentElement.clientWidth;}
 
@@ -418,8 +522,9 @@ class NoCss{
         //var baseAttrs = this.getPropertyNames(document.createElement('div').style);
         //var attrs = ['radius', 'bgcolor'].concat(baseAttrs);
         var attrs = [
-            //
-            'width', 'height', 'margin', 'padding', 'top', 'left', 'right', 'bottom',
+            // alias
+            'width', 'height', 'margin', 'padding', 'top', 'left', 'right', 'bottom', 
+            'gridC', 'gridR', 
 
             // basic
             'newClass', 'z', 'visible',
@@ -430,15 +535,15 @@ class NoCss{
             // position
             'anchor', 'lineAnchor', 'fixAnchor', 'dock', 
     
-            // child position
-            'childAnchor', 'gridCol', 'childMargin',
+            // child
+            'childAnchor', 'childMargin', 'childPadding',
     
             // theme
-            'theme', 'color',
+            'themeCls', 'color',
             'bg','bgColor', 'bgImage', 'bgRepeat', 'bgPosition', 'bgSize',
         
             // effect
-            'shadow', 'transform', 'rotate', 'scale', 'skew', 'textShadow',
+            'shadow', 'transform', 'rotate', 'scale', 'skew', 'textShadow', 
             'hoverBgColor', 'hoverColor',
     
             // event
@@ -482,27 +587,6 @@ class NoCss{
         };
     }
 
-    //-----------------------------------------------------
-    // Attributes
-    //-----------------------------------------------------
-    /**Set custom attributes values
-    * @param {HTMLElement} ele
-    */
-    static setCustomAttributes(ele){
-        // custome tag render process
-        var render = this.getCustomTag(ele);
-        if (render != null){
-            ele = render.render(ele);
-        }
-
-        // set attributes
-        var attrs = ele.getAttributeNames();
-        attrs.forEach((attr) => {
-            var val = ele.getAttribute(attr);
-            if (val != null)
-                this.setCustomAttribute(ele, attr, val);
-        })
-    }
 
     //-----------------------------------------------------
     // Custom tag
@@ -529,6 +613,28 @@ class NoCss{
         return render;
     }
 
+    //-----------------------------------------------------
+    // Attributes
+    //-----------------------------------------------------
+    /**Set custom attributes values
+    * @param {HTMLElement} ele
+    */
+    static setCustomAttributes(ele){
+        // custome tag render process
+        var render = this.getCustomTag(ele);
+        if (render != null){
+            ele = render.render(ele);
+        }
+
+        // set attributes
+        var attrs = ele.getAttributeNames();
+        attrs.forEach((attr) => {
+            var val = ele.getAttribute(attr);
+            if (val != null)
+                this.setCustomAttribute(ele, attr, val);
+        })
+    }
+
     // style keys has 638-645 items.
     static styleKeys = Object.keys(document.createElement('div').style);
 
@@ -548,7 +654,7 @@ class NoCss{
 
         // set extension attribute value
         switch(name.toLowerCase()){
-            // rename
+            // alias
             case 'z':                 ele.style.zIndex = newValue; break;
             case 'radius':            ele.style.borderRadius = newValue;  break;
             case 'box':               ele.style.boxSizing = newValue; break;
@@ -559,6 +665,8 @@ class NoCss{
             case 'bgposition':        ele.style.backgroundPosition = newValue; break;
             case 'bgsize':            ele.style.backgroundSize = newValue; break;
             case 'events':            ele.style.pointerEvents = newValue; break;
+            case 'gridc':             this.setGridColumn(ele, newValue); break;
+            case 'gridr':             this.setGridRow(ele, newValue); break;
 
             // common
             case 'newclass':          ele.classList.add(newValue); break; //.setAttribute('class', newValue + ' ' + ele.getAttribute('class')); break;
@@ -570,14 +678,14 @@ class NoCss{
             case 'dock':              this.setDock(ele, newValue, 'absolute'); break;
             case 'lineanchor':        this.setLineAnchor(ele, newValue); break;
 
-            // grid
-            case 'childmargin':       this.setChildMargin(ele, newValue); break;
+            // child
             case 'childanchor':       this.setChildAnchor(ele, newValue); break;
-            case 'gridcol':           this.setGridColumn(ele, newValue); break;
+            case 'childmargin':       this.setChildStyle(ele, 'margin', newValue); break;
+            case 'childpadding':      this.setChildStyle(ele, 'padding', newValue); break;
 
 
             // theme
-            //case 'theme':             this.setThemeCls(newValue); break;
+            case 'themecls':          Theme.setThemeCls(ele, newValue); break;
 
             // effect
             case 'shadow':            this.setShadow(ele, newValue); break;
@@ -593,7 +701,6 @@ class NoCss{
             case 'draggable':         ele.setAttribute('draggable', newValue); break;
         }
     }
-
 
     //-----------------------------------------------------
     // Common
@@ -649,15 +756,16 @@ class NoCss{
             tag.textContent = ele.styleTag.textContent;
     }
 
-    /** Set children margin 
+    /** Set children style
      * @param {HTMLElement} ele 
+     * @param {string} name css style name. eg. margin
      * @param {string} val css number. eg. 10px, 1em, 1rem
     */
-    static setChildMargin(ele, val){
+    static setChildStyle(ele, name, val){
         ele.id = this.getId(ele);
         if (ele.styleTag == null)
             ele.styleTag = document.createElement('style');
-        ele.styleTag.textContent = `#${ele.id} > *  {margin: ${val} }`;
+        ele.styleTag.textContent = `#${ele.id} > *  {${name}: ${val} }`;
         this.saveStyle(ele);
     }
 
@@ -969,6 +1077,24 @@ class NoCss{
         }
         return ele;
     }
+
+    /**Set grid row
+     * @param {HTMLElement} ele
+     * @param {string} expr start-length or start/end
+     */
+    static setGridRow(ele, expr){
+        if (expr.indexOf('-') != -1){
+            // start-length
+            const parts = expr.split("-");
+            ele.style.gridRowStart = parts[0];
+            ele.style.gridRowEnd = parseInt(parts[1]) + 1;
+        }
+        else{
+            // start/end
+            ele.style.gridRow = expr;
+        }
+        return ele;
+    }
 }
 
 /*************************************************************
@@ -1043,7 +1169,7 @@ class Row extends Tag {
         ele.style.flexDirection = "row";
         var gap = ele.getAttribute('gap');
         if (gap != null)
-            NoCss.setChildMargin(ele, `0 ${gap} 0 0`);
+            NoCss.setChildStyle(ele, 'margin', `0 ${gap} 0 0`);
         return ele;
     }
 }
@@ -1065,7 +1191,7 @@ class Column extends Tag {
         ele.style.flexDirection = "column";
         var gap = ele.getAttribute('gap');
         if (gap != null)
-            NoCss.setChildMargin(ele, `0 0 ${gap} 0`);
+            NoCss.setChildStyle(ele, 'margin', `0 0 ${gap} 0`);
         return ele;
     }
 }
@@ -1243,12 +1369,12 @@ class Button extends Tag {
         var asyncClick = ele.getAttribute('asyncClick');
         if (asyncClick != null) this.setClick(ele, asyncClick, true);
 
+        // default themecls
+        var themeCls = ele.getAttribute('themeCls');
+        if (themeCls == null) ele.setAttribute('themeCls', 'primary');
+
         // theme
         ele.setTheme = function(){
-            var themeCls = ele.getAttribute('themeCls');
-            if (themeCls == null) themeCls = 'primary';
-            Theme.setBaseTheme(ele);
-
             var o = Theme.current;
             ele.style.borderRadius = o.radius;
             ele.style.color = o.textLight;
@@ -1346,6 +1472,7 @@ class Mask {
  ***********************************************************/
 class Toast {
     static counter = 0;
+
     /**
      * Show toast
      * @param {string} icon iconname without extension
@@ -1471,11 +1598,78 @@ class Tooltip {
 class Image extends Tag {
     static { NoCss.registCustomTag('Img', new Image());}
 
-    /**@param {HTMLElement}} ele */
+    /**@param {HTMLElement} ele */
     render(ele) {
+        ele.style.boxSizing = 'border-box';
+
         var icon = ele.getAttribute('icon');
         if (icon != null)
             ele.src = `${Utils.getIconUrl(icon)}`;
+
+        var avatar = ele.getAttribute('avatar');
+        if (avatar != null) {
+            ele.style.height = ele.style.width;
+            ele.style.backgroundColor = 'white';
+            ele.style.padding = '5px';
+            ele.style.border = '1px solid #a0a0a0';
+            ele.style.borderRadius = '50%';
+        }
+
+        return ele;
+    }
+}
+
+
+/************************************************************
+ * IconFont
+ * @example
+ *     <icon name='user'  color='red'></icon>
+ *     <icon name='users' color='blue'></icon>
+ * @description
+ *     see https://www.iconfont.cn/manage/index?manage_type=myprojects&projectId=1271142
+ ***********************************************************/
+class Icon extends Tag {
+    static { NoCss.registCustomTag('Icon', new Icon());}
+
+    /**@param {HTMLElement} ele */
+    render(ele) {
+        // <span class="icon iconfont icon-shop-pay"></span>
+        ele.style.display = 'inline-block';
+        ele.style.transition = 'all 0.5s';  // animation
+        ele.classList.add('icon', 'iconfont');
+        ele.classList.add('icon-' + ele.getAttribute('name'));
+
+        // <link rel="stylesheet" href="iconfont.css">
+        Utils.addLink(Utils.iconFontRoot + "iconfont.css");
+        return ele;
+    }
+}
+
+
+
+/************************************************************
+ * FontAwesome Icon
+ * @example
+ *     <icona name='bulb' type='solid' color='red'></icona>
+ *     <icona name='bulb' type='regular' color='blue'></icona>
+ * @description
+ *     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ *     <i class="fa-regular fa-lightbulb" style="color:red"></i>
+ *     see https://fontawesome.com.cn/v5
+ ***********************************************************/
+class IconAwesome extends Tag {
+    static { NoCss.registCustomTag('Icona', new IconAwesome());}
+
+    /**@param {HTMLElement} ele */
+    render(ele) {
+        // <i class="fa-regular fa-lightbulb" style="color:red"></i>
+        ele.style.display = 'inline-block';
+        ele.style.transition = 'all 0.5s';  // animation
+        ele.classList.add('fa-' + ele.getAttribute('name'));
+        ele.classList.add('fa-' + ele.getAttribute('type'));
+
+        // <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        Utils.addLink("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css")
         return ele;
     }
 }
