@@ -1,0 +1,32 @@
+<head>
+    <script src="../bin/nocss.js"></script>
+    <style>
+        * {transition: all 0.4s; box-sizing: border-box;}
+    </style>
+</head>
+<body width="100%" height="100%" padding="20px" childMargin="0 0 10px 0">
+    <column id='panel' width="400px" height="500px">
+        <rect id="title" width="400px" height="40px" radius="20px 20px 0 0" border="1px solid #a0a0a0" bg="lightblue" hoverColor="red">Title</rect>
+        <rect id='body'  width="400px" height="400px" radius="0 0 20px 20px" border="1px solid #a0a0a0" bg="">Body</rect>
+    </column>
+</body>
+    
+<script>
+    //-------------------------------------------
+    // dynamic create tag and set property value.
+    //-------------------------------------------
+    NoCss.registProperties();
+
+    //-------------------------------------------
+    // drop panel
+    //-------------------------------------------
+    var divPanel = document.getElementById('panel');
+    var divTitle = document.getElementById('title');
+    var divBody = document.getElementById('body');
+    divPanel.expanded = true;
+    divTitle.addEventListener('click', ()=> {
+        divPanel.expanded = !divPanel.expanded;
+        divBody.style.height = divPanel.expanded ? '400px' : '100px';
+    });
+</script>
+    

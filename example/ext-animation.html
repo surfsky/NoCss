@@ -1,6 +1,6 @@
 <html>
 <head>
-    <script src="../nocss.js"></script>
+    <script src="../bin/nocss.js"></script>
 </head>
 <body>
     <row gap="20px">
@@ -14,7 +14,7 @@
 <script>
     function animate(ele){
         ele = document.getElementById('rect1');
-        NoCss.animate(ele, ()=> ele.style.backgroundColor = getRandomColor());
+        Utils.animate(ele, ()=> ele.style.backgroundColor = getRandomColor());
     }
 
     function getRandomColor() {

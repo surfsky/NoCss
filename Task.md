@@ -1,16 +1,18 @@
 ------------------------------------------------------
 task
 ------------------------------------------------------
+/实现button icon 属性：实现扩展属性。
 实现全屏 mask loading 效果
+实现 <StyleAll box='border-box'>
+实现 resize = 'all,t,b,l,r'
+实现 drag = 'all,h,v'
 实现 hoverEffect，把效果写在里面
-实现 StyleInit
-    
 
 实现复杂控件
-    实现dialog
     实现 panel
+    实现 dialog
     实现 switch
-    动态创建的对象中的子对象解析有问题，如<toast.row>
+    动态创建的对象中的子对象解析有问题，如<toast.row>，考虑用innerHtml方式
     实现各种 popup
 
 

@@ -1,0 +1,34 @@
+<head>
+    <script src="../bin/nocss.js"></script>
+    <style>
+        * {transition: all 0.4s; box-sizing: border-box;}
+    </style>
+</head>
+<body width="100%" height="100%" padding="20px" childMargin="0 0 10px 0">
+    <row id='switch' width="400px" height="40px">
+        <rect id='left'  width="100px" height='40px' radius="20px 0 0 20px" border="1px solid #a0a0a0" bg="lightblue" cursor="pointer">Left</rect>
+        <rect id='right' width="100px" height='40px' radius="0 20px 20px 0" border="1px solid #a0a0a0" bg="" cursor="pointer">Right</rect>
+    </row>
+</body>
+    
+<script>
+    //-------------------------------------------
+    // dynamic create tag and set property value.
+    //-------------------------------------------
+    NoCss.registProperties();
+
+    //-------------------------------------------
+    // switch button
+    //-------------------------------------------
+    var divSwitch = document.getElementById('switch');
+    var divLeft = document.getElementById('left');
+    var divRight = document.getElementById('right');
+    divLeft.addEventListener('click', ()=> setSwitchValue(true));
+    divRight.addEventListener('click', ()=> setSwitchValue(false));
+    function setSwitchValue(b){
+        divSwitch.value = b;
+        divLeft.bgColor = b ? 'lightblue' : 'white';
+        divRight.bgColor = b ? 'white' : 'lightblue';
+    }
+</script>
+    

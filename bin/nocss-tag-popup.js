@@ -1,4 +1,4 @@
-import {Anchor, Theme, Utils} from '../nocss-utils.js'
+import {Anchor, Theme, Utils} from './nocss-utils.js'
 import {NoCss, Tag} from './nocss-base.js';
 
 
@@ -10,7 +10,7 @@ import {NoCss, Tag} from './nocss-base.js';
  *     Mask.show(100);
  *     Mask.hide();
  ***********************************************************/
-class Mask {
+export class Mask {
     static async show(z = 99) {
         if (this.overlay == null) {
             this.overlay = document.createElement('div');
@@ -48,7 +48,7 @@ class Mask {
  * @example
  *     Toast.show('info', 'message info');
  ***********************************************************/
-class Toast {
+export class Toast {
     static counter = 0;
 
     /**
@@ -99,7 +99,7 @@ class Toast {
  *     Tooltip.bind('#id');
  *     Tooltip.hide();
  ***********************************************************/
-class Tooltip {
+export class Tooltip {
     /** Bind all matched elements to show tooltip
      * @param {string} selector Element selector 
      * @param {string} [attrName='tip'] Attribute name or callback， If null, show element's text content.

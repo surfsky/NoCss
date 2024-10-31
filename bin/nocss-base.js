@@ -1,4 +1,4 @@
-import {Anchor, Theme, Utils} from '../nocss-utils.js'
+import {Anchor, Theme, Utils} from './nocss-utils.js'
 
 /*************************************************************
  * NoCss class : Write html with only attribute, no CSS anymore.

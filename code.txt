@@ -112,3 +112,14 @@ customElements.define('rectx', RectX, { extends: customNamespace });
         this.setChildStyle(ele, 'margin', val);
     }
 
+
+
+        // enject extension functions
+        HTMLElement.prototype.animate = function(animFunc, endFunc=null, second=0.1, easing='ease'){
+            var ele = this;
+            ele.style.transition = `all ${second}s ${easing}`;
+            if (endFunc != null)
+                ele.addEventListener('transitionend', () => endFunc(ele), { once: true });
+            requestAnimationFrame(() => animFunc(ele));
+        };
+

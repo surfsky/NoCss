@@ -2,7 +2,7 @@
 <head>
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <script src="../nocss.js"></script>
+    <script src="../bin/nocss.js"></script>
 </head>
 <body>
     <pre border='0px solid red' anchor="center" width='90%' padding="20px" overflow="scroll">
@@ -25,16 +25,19 @@
       }
     });
 
-    // Show page code. Page url like:  code.html?a.html
+    // Show page code. Page url like:  code.html?src=a.html&show=all
     async function showPageCode(){
-        //
-        var url = getQueryString(window.location.href);
-        var content = await get(url);
+        // parse query string to url & show
+        var qs = Utils.getQueryStrings(window.location.href);
+        var url = qs['src'];
+        var show = qs['show'];
+        var content = await Utils.get(url);
 
         // 预处理
         content = content.replace(/<!--[\s\S]*?-->/g, ''); // 删除html注释
         //content = content.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');  // 删除script标签块
-        content = content.replace(/<script(?!.*src)[^>]*>(?:.|\n)*?<\/script>/gi, ''); // 删除script标签块，但保留带src的script标签行
+        if (show != 'all')
+           content = content.replace(/<script(?!.*src)[^>]*>(?:.|\n)*?<\/script>/gi, ''); // 删除script标签块，但保留带src的script标签行
         content = content.replace(/^\s*\n/gm, '');  // 删除空行
 
         // 高亮显示在pre标签内部
@@ -45,28 +48,6 @@
         }
     }
 
-    // Get query string part.
-    function getQueryString(url) {
-      const queryString = url.split('?')[1];
-      return queryString? queryString : null;
-    }
 
-    // Ajax get url text.
-    async function get(url) {
-      return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-              const content = xhr.responseText;
-              resolve(content);
-            } else {
-              reject(new Error('Failed to fetch the page.'));
-            }
-          }
-        };
-        xhr.send();
-      });
-    }
+
 </script>

@@ -1,4 +1,4 @@
-import {Anchor, Theme, Utils} from '../nocss-utils.js'
+import {Anchor, Theme, Utils} from './nocss-utils.js'
 import {NoCss, Tag} from './nocss-base.js';
 
 

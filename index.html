@@ -3,7 +3,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="./nocss.ico" type="image/x-icon" />
     <title>NoCSS.js</title>
-    <script src="./nocss.js" ></script>
+    <script src="../bin/nocss.js" ></script>
 </head>
 
 <body onload="setLinks()" padding="0">
@@ -40,6 +40,7 @@
             </ul>
             <li>Popup</li>
             <ul>
+              <li><a target="iframe1" href="./example/popup-dialog.html">Dialog*</a></li>
               <li><a target="iframe1" href="./example/popup.html">Popup*</a></li>
             </ul>
             <li>Form</li>
@@ -48,13 +49,16 @@
             </ul>
             <li>Extension</li>
             <ul>
-              <li><a target="iframe1" href="./example/animation.html">Animation</a></li>
+              <li><a target="iframe1" href="./example/ext-animation.html&show=all">Animation</a></li>
+              <li><a target="iframe1" href="./example/ext-property.html&show=all">Property</a></li>
+              <li><a target="iframe1" href="./example/ext-switch.html&show=all">Switch</a></li>
+              <li><a target="iframe1" href="./example/ext-panel.html&show=all">Panel</a></li>
             </ul>
           </ul>
         </column>
         <column flex="1">
           <iframe id='iframe1' name="iframe1" src="./example/about.html"           height="60%" style="border:0;"></iframe>
-          <iframe id='iframe2' name="iframe2" src="./example/code.html?about.html" flex="1"     border="1px" ></iframe>
+          <iframe id='iframe2' name="iframe2" src="./example/code.html?src=about.html" flex="1"     border="1px" ></iframe>
         </column>
     </row>
 </body>
@@ -69,14 +73,20 @@
         for (let i = 0; i < links.length; i++) {
             links[i].addEventListener('click', function (event) {
                 event.preventDefault();
-                iframe1.src = this.href;
 
-                // code.html?xxx.html
-                var href = this.href;
-                var n = href.lastIndexOf('/');
+                // iframe1 : xxx.html
+                var url = this.href;
+                var index = url.indexOf('&');
+                if (index != -1) 
+                    url = url.slice(0, index);
+                iframe1.src = url;
+
+                // iframe2 : code.html?src=xxx.html&show=all
+                url = this.href;
+                var n = url.lastIndexOf('/');
                 if (n != -1)
-                    href = href.slice(n+1);
-                iframe2.src = './example/code.html?' + href;
+                    url = url.slice(n+1);
+                iframe2.src = './example/code.html?src=' + url;
             });
         }
     }

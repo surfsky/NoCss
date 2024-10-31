@@ -1,0 +1,50 @@
+<head>
+    <script src="../bin/nocss.js"></script>
+    <style>
+        * {transition: all 0.4s; box-sizing: border-box;}
+    </style>
+</head>
+<body width="100%" height="100%" padding="20px" childMargin="0 0 10px 0">
+</body>
+    
+<script>
+    //-------------------------------------------
+    // dynamic create tag and set property value.
+    //-------------------------------------------
+    NoCss.registProperties();
+    const div = document.createElement('div');
+    //div.style.width  = '80px';
+    //div.style.height = '40px';
+    //div.style.padding = '4px';
+    div.width  = '400px';
+    div.height = '40px';
+    div.padding = '4px';
+    div.innerHTML = "DIV2: Created by script"
+    div.radius = '5px';
+    div.bgColor = 'blue';
+    div.childAnchor = 'center';
+    div.color = 'white';
+    div.fontWeight = 'bold';
+    document.body.appendChild(div);
+
+    // dynamic change property
+    setInterval(()=> {
+        div.bgColor = getRandomColor();
+        div.width = getRandomWidth();
+    }, 1000);
+
+
+    /**Get random width*/
+    function getRandomWidth(){
+        return Math.floor(Math.random() * 400 + 200) + 'px';
+    }
+
+    /**Get random color */
+    function getRandomColor() {
+        const r = Math.floor(Math.random() * 256);
+        const g = Math.floor(Math.random() * 256);
+        const b = Math.floor(Math.random() * 256);
+        return `rgb(${r},${g},${b})`;
+    }
+</script>
+    

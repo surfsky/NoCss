@@ -149,9 +149,21 @@ class Theme{
  * Utils: sleep, theme, icon, color, px, position....
  ***********************************************************/
 class Utils {
+    //-----------------------------------------
+    // Icon
+    //-----------------------------------------
     /** Icon root path*/
     static iconRoot = "../img/";
     static iconFontRoot = '../iconfont/';
+
+    /** Get icon url from icons root and icon name 
+     * @param {string} name IconName without folder and extension
+    */
+    static getIconUrl(name){
+        if (name.includes('.'))
+            return this.iconRoot + name;
+        return `${this.iconRoot}${name}.png`;
+    }
 
 
     //-----------------------------------------
@@ -380,18 +392,25 @@ class Utils {
         }
     }
 
-
-    //-----------------------------------------
-    // Icon
-    //-----------------------------------------
-    /** Get icon url from icons root and icon name 
-     * @param {string} name IconName without folder and extension
-    */
-    static getIconUrl(name){
-        if (name.includes('.'))
-            return this.iconRoot + name;
-        return `${this.iconRoot}${name}.png`;
+    //-----------------------------------------------------
+    // Animation
+    //-----------------------------------------------------
+    /**
+     * Make animation
+     * @param {HTMLElement} ele
+     * @param {function} animFunc  target animation function. eg. this.style.height='0px';
+     * @param {function} endFunc callback animation when finished. eg. this.style.visibility = 'hidden';
+     * @param {number} second animation duration seconds
+     * @param {string} [easing='ease'] easing animation name 
+     * @example tag.animate((ele)=> ele.style.height = '0px');
+     */
+    static animate(ele, animFunc, endFunc=null, second=0.1, easing='ease'){
+        ele.style.transition = `all ${second}s ${easing}`;
+        if (endFunc != null)
+            ele.addEventListener('transitionend', () => endFunc(ele), { once: true });
+        requestAnimationFrame(() => animFunc(ele));
     }
+
 
 
     //-----------------------------------------
@@ -506,6 +525,64 @@ class Utils {
             }
             : null;
       }
+
+    //-----------------------------------------
+    // Ajax
+    //-----------------------------------------
+    /**Parse QueryString 
+     * @param {string} url
+     * @returns {object} 
+    */
+    static getQueryStrings(url) {
+        const queryString = url.split('?')[1];
+        if (!queryString) {
+            return {};
+        }
+        return queryString.split('&').reduce((acc, pair) => {
+            const [key, value] = pair.split('=');
+            acc[key] = decodeURIComponent(value);
+            return acc;
+        }, {});
+    }
+
+    /**Async Ajax get
+     * @param {string} url 
+    */
+    static async get(url) {
+        return await this.ajax('GET', url);
+    }
+
+    /**Async Ajax post
+     * @param {string} url 
+     * @param {object} data 
+    */
+    static async post(url, data) {
+        return await this.ajax('GET', url, data);
+    }
+
+    /**Async Ajax 
+     * @param {string} method GET|POST
+     * @param {string} url 
+     * @param {object} data valid when method is POST 
+    */
+    static async ajax(method, url, data=null){
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open(method, url, true);
+            xhr.onreadystatechange = function () {
+              if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                  const content = xhr.responseText;
+                  resolve(content);
+                } else {
+                  reject(new Error('Failed to fetch the page.'));
+                }
+              }
+            };
+
+            xhr.send(data);
+          });    
+    }
 }
 
 /*************************************************************
@@ -514,14 +591,11 @@ class Utils {
  *************************************************************/
 class NoCss{
 
-    /**
-     * static constrctor
-     */
-    static {
-        // enject custom properties
+    /**Regist convenient properties */
+    static registProperties(){
         //var baseAttrs = this.getPropertyNames(document.createElement('div').style);
         //var attrs = ['radius', 'bgcolor'].concat(baseAttrs);
-        var attrs = [
+        var names = [
             // alias
             'width', 'height', 'margin', 'padding', 'top', 'left', 'right', 'bottom', 
             'gridC', 'gridR', 
@@ -549,12 +623,23 @@ class NoCss{
             // event
             'events', 'click', 'draggable',
         ];
-        attrs.forEach((attr) =>{
+        names.forEach((name) =>{
             var self = this;
-            HTMLElement.prototype.__defineGetter__(attr, () => this.getAttribute(attr));
-            HTMLElement.prototype.__defineSetter__(attr, function (value) { self.setCustomAttribute(this, attr, value); });
+            HTMLElement.prototype.__defineGetter__(name, function(){
+                //return this.getAttribute(name);
+                return self.getCustomAttribute(this, name);
+            });
+            HTMLElement.prototype.__defineSetter__(name, function (value) { 
+                this.setAttribute(name, value);
+                self.setCustomAttribute(this, name, value); 
+            });
         });
+    }
 
+    /**
+     * static constrctor
+     */
+    static {
         // create observer for dom changing.
         const observer = new MutationObserver((mutationsList, observer) => {
             for (const mutation of mutationsList) {
@@ -576,15 +661,6 @@ class NoCss{
             }
         });
         observer.observe(document, { attributes: true, childList: true, subtree: true });
-
-        // enject extension functions
-        HTMLElement.prototype.animate = function(animFunc, endFunc=null, second=0.1, easing='ease'){
-            var ele = this;
-            ele.style.transition = `all ${second}s ${easing}`;
-            if (endFunc != null)
-                ele.addEventListener('transitionend', () => endFunc(ele), { once: true });
-            requestAnimationFrame(() => animFunc(ele));
-        };
     }
 
 
@@ -616,6 +692,17 @@ class NoCss{
     //-----------------------------------------------------
     // Attributes
     //-----------------------------------------------------
+    /**Get attribute value
+     * @param {HTMLElement} ele
+     * @param {string} name  
+     */
+    static getCustomAttribute(ele, name){
+        var styleName = this.styleNames.find(t => t.toLowerCase() === name);
+        if (styleName != null)
+            return ele.style[styleName];
+        return ele.getAttribute(name);
+    }
+
     /**Set custom attributes values
     * @param {HTMLElement} ele
     */
@@ -636,7 +723,7 @@ class NoCss{
     }
 
     // style keys has 638-645 items.
-    static styleKeys = Object.keys(document.createElement('div').style);
+    static styleNames = Object.keys(document.createElement('div').style);
 
     /**Set custom attribute value
     * @param {HTMLElement} ele
@@ -645,7 +732,7 @@ class NoCss{
     */
     static setCustomAttribute(ele, name, newValue){
         // set basic style property (support low/high case)
-        this.styleKeys.forEach(k =>{
+        this.styleNames.forEach(k =>{
             if (k.toLowerCase() == name) {
                 ele.style[k] = newValue;
                 return;
@@ -769,24 +856,6 @@ class NoCss{
         this.saveStyle(ele);
     }
 
-    //-----------------------------------------------------
-    // Animation
-    //-----------------------------------------------------
-    /**
-     * Make animation
-     * @param {HTMLElement} ele
-     * @param {function} animFunc  target animation function. eg. this.style.height='0px';
-     * @param {function} endFunc callback animation when finished. eg. this.style.visibility = 'hidden';
-     * @param {number} second animation duration seconds
-     * @param {string} [easing='ease'] easing animation name 
-     * @example tag.animate((ele)=> ele.style.height = '0px');
-     */
-    static animate(ele, animFunc, endFunc=null, second=0.1, easing='ease'){
-        ele.style.transition = `all ${second}s ${easing}`;
-        if (endFunc != null)
-            ele.addEventListener('transitionend', () => endFunc(ele), { once: true });
-        requestAnimationFrame(() => animFunc(ele));
-    }
 
     //-----------------------------------------------------
     // Anchor
@@ -1363,6 +1432,17 @@ class Button extends Tag {
         ele.style.textAlign = 'center';  // horizontal center text
         NoCss.setHoverOpacity(ele, '0.8');
 
+        var icon = ele.getAttribute('icon');
+        if (icon != null) {
+            // <icon color='black'  fontsize="34px" key='user'      ></icon>
+            var tag = document.createElement('icon');
+            tag.setAttribute('key', icon);
+            tag.style.color = Theme.current.textLight;
+            tag.style.fontSize = '20px';
+            tag.style.marginRight = '4px';
+            ele.insertBefore(tag, ele.firstChild);
+        }
+
         // event
         //var click = ele.getAttribute('click');
         //if (click != null) this.setClick(ele, click, false);
@@ -1637,7 +1717,7 @@ class Icon extends Tag {
         ele.style.display = 'inline-block';
         ele.style.transition = 'all 0.5s';  // animation
         ele.classList.add('icon', 'iconfont');
-        ele.classList.add('icon-' + ele.getAttribute('name'));
+        ele.classList.add('icon-' + ele.getAttribute('key'));
 
         // <link rel="stylesheet" href="iconfont.css">
         Utils.addLink(Utils.iconFontRoot + "iconfont.css");
@@ -1665,7 +1745,7 @@ class IconAwesome extends Tag {
         // <i class="fa-regular fa-lightbulb" style="color:red"></i>
         ele.style.display = 'inline-block';
         ele.style.transition = 'all 0.5s';  // animation
-        ele.classList.add('fa-' + ele.getAttribute('name'));
+        ele.classList.add('fa-' + ele.getAttribute('key'));
         ele.classList.add('fa-' + ele.getAttribute('type'));
 
         // <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">

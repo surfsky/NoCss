@@ -12,7 +12,7 @@
     DIV1</div>
 ```
 
-see https://surfsky.github.io/nocss/
+see https://surfsky.github.io/NoCss/
 
 
 # Supported attributes
