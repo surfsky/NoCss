@@ -123,3 +123,20 @@ customElements.define('rectx', RectX, { extends: customNamespace });
             requestAnimationFrame(() => animFunc(ele));
         };
 
+    &lt;x-style&gl; tag apply style to body. The default css is:
+    <pre>
+    /* fullscreen */
+    html,body {
+        width: 100%;  height: 100%; 
+        padding: 0px; margin: 0px;
+    }
+
+    /* boxmodule */
+    *, *::before, *::after {box-sizing: border-box;}
+
+    /* animation */
+    * {transition: 0.5s;}
+
+    /* link */
+    a, a:hover, a:visited { text-decoration: none; }
+    </pre>

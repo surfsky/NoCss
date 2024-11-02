@@ -1,32 +1,25 @@
 <html>
 <head>
     <script src="../bin/nocss.js"></script>
+    <globalStyle 
+        box='border-box' 
+        transition='all 0.5s' 
+        linkColor='red' 
+        linkHoverColor='green' 
+        linkVisitColor='purple'
+        fullScreen="true"
+        rem="16px"
+        />
 </head>
 
 <body 
-    bgimage="http://gips3.baidu.com/it/u=1821127123,1149655687&fm=3028&app=3028&f=JPEG&fmt=auto?w=720&h=1280" 
+    bgimage="../img/fruit.jpg" 
     bgsize="cover" 
-    width="100%"
-    height="100%"
-    padding="0"
-    margin="0"
     >
-    &lt;x-style&gl; tag apply style to body. The default css is:
-    <pre>
-    /* fullscreen */
-    html,body {
-        width: 100%;  height: 100%; 
-        padding: 0px; margin: 0px;
-    }
-
-    /* boxmodule */
-    *, *::before, *::after {box-sizing: border-box;}
-
-    /* animation */
-    * {transition: 0.5s;}
-
-    /* link */
-    a, a:hover, a:visited { text-decoration: none; }
-    </pre>
+    <column>
+        <a href="http://baidu.com/">Baidu</a>
+        <a href="http://sina.com.cn/">Sina</a>
+        <a href="http://qq.com/">QQ</a>
+    </column>
 </body>
 </html>

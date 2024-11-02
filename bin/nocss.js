@@ -15,6 +15,21 @@ const Anchor = {
     F:  'fill'
 };
 
+/**Color*/
+class Color{
+    r = 0;
+    g = 0;
+    b = 0;
+    a = 0;
+
+    constructor(r,g,b,a){
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+    }
+}
+
 /************************************************************
  * Theme
  ***********************************************************/
@@ -478,7 +493,15 @@ class Utils {
         }
       }
 
+    /**Parse color string to object with r,g,b 
+     * @param {string} colorStr support blue, #F0F0F0, rgb(...), rgba(...)
+     * @returns {object} color object with r,g,b,a properties.
+    */
     static parseColor(colorStr) {
+        colorStr = colorStr.trim();
+        if (colorStr == '')
+            return null;
+
         let rgb;
         if (colorStr.startsWith('#')) {
           rgb = this.hexToRgb(colorStr);
@@ -487,7 +510,12 @@ class Utils {
         } else if (colorStr.startsWith('rgba(')) {
           rgb = this.rgbaFromRgbaExpression(colorStr);
         } else {
-          return null;
+            var div = document.createElement('div');
+            div.style.color = colorStr;
+            document.body.appendChild(div);
+            var clr = window.getComputedStyle(div).color;
+            document.body.removeChild(div);
+            return this.parseColor(clr);
         }
         return rgb;
     }
@@ -633,6 +661,20 @@ class NoCss{
                 this.setAttribute(name, value);
                 self.setCustomAttribute(this, name, value); 
             });
+
+            /*
+            HTMLElement.defineProperty(mydiv, name, {
+                get: function () {
+                    return self.getCustomAttribute(this, name);
+                },
+                set: function (value) {
+                    this.setAttribute(name, value);
+                    self.setCustomAttribute(this, name, value);
+                },
+                enumerable: true,
+                configurable: true
+            });
+            */
         });
     }
 
@@ -1750,6 +1792,137 @@ class IconAwesome extends Tag {
 
         // <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         Utils.addLink("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css")
+        return ele;
+    }
+}
+
+
+/************************************************************
+ * Global style
+ * @example
+ *     <globalStyle 
+ *         box='border-box' 
+ *         transition='all 0.5s' 
+ *         linkColor='red' linkHoverColor='green' linkVisitColor='purple' 
+ *         fullScreen='true' 
+ *         rem='16px'
+ *         />
+ ***********************************************************/
+class GlobalStyle extends Tag {
+    static { NoCss.registCustomTag('GlobalStyle', new GlobalStyle());}
+
+    /**@param {HTMLElement} ele */
+    render(ele) {
+        //
+        var box = ele.getAttribute('box') || 'border-box';
+        var transition = ele.getAttribute('transition') || '0.5s';
+        var linkColor = ele.getAttribute('linkColor') || 'blue';
+        var linkHoverColor = ele.getAttribute('linkHoverColor') || 'green';
+        var linkVisitColor = ele.getAttribute('linkVisitColor')|| 'purple';
+        var fullScreen = ele.getAttribute('fullScreen')|| 'true';
+        var rem = ele.getAttribute('rem') || '16px';
+
+        //
+        var tag = document.createElement('style');
+        tag.id = 'global';
+        tag.textContent = `
+            /* for all elements */
+            *, *::before, *::after {
+                box-sizing: ${box};
+                transition: ${transition};
+            }
+
+            /* link */
+            a, a:hover, a:visited { text-decoration: none; }
+            a         {color: ${linkColor}}
+            a:hover   {color: ${linkHoverColor}}
+            a:visited {color: ${linkVisitColor}}
+
+            /* rem */
+            html { font-size : ${rem} }
+        `;
+        if (fullScreen == 'true')
+            tag.textContent = tag.textContent + `
+            /* fullscreen */
+            html,body {
+                width: 100%;  height: 100%;
+                padding: 0px; margin: 0px;
+            }
+        `;
+        document.head.appendChild(tag);
+        return ele;
+    }    
+}
+
+
+
+class Panel extends Column{
+    static {NoCss.registCustomTag('Panel', new Panel());}
+
+    /**
+    <column id='panel' width="400px" height="500px">
+        <rect id="title" width="400px" height="40px" radius="20px 20px 0 0" border="1px solid #a0a0a0" bg="lightblue" hoverColor="red">Title</rect>
+        <rect id='body'  width="400px" height="400px" radius="0 0 20px 20px" border="1px solid #a0a0a0" bg="">Body</rect>
+    </column>
+     */
+    render(ele){
+        super.render(ele);
+        ele.id = NoCss.getId(ele);
+        ele.style.overflow = 'hidden';
+
+        var titleId = `${ele.id}-title`;
+        var bodyId = `${ele.id}-body`;
+
+        // common attributes
+        var height          = ele.getAttribute('height') || '400px';
+        var borderColor     = ele.getAttribute('borderColor') || '#a0a0a0';
+        var radiusTopLeft   = ele.getAttribute('radius') || '0';
+        var radiusTopRight  = ele.getAttribute('radius') || '0';
+
+        // custom attributes
+        var titleHeight     = ele.getAttribute('titleHeight') || '40px';
+        var titleBgColor    = ele.getAttribute('titleBgColor') || 'lightBlue';
+        var titleColor      = ele.getAttribute('titleColor') || 'black';
+        var titleBgHoverColor = Utils.getDarkerColor(titleBgColor);
+        var minHeight       = ele.getAttribute('minHeight') || titleHeight;
+
+        // render innerHTML
+        ele.innerHTML = `
+            <div id="${titleId}" width="100%" height="${titleHeight}" 
+                borderBottom="1px solid ${borderColor}" 
+                color='${titleColor}'
+                bgColor="${titleBgColor}" hoverBgColor="${titleBgHoverColor}"
+                radiusTopLeft='${radiusTopLeft}'
+                radiusTopRight='${radiusTopRight}'
+                childAnchor='center'
+                >
+                Title
+            </div>
+            <div id='${bodyId}'  width="100%" flex='1' childAnchor='center' overflow='hidden'>
+                ${ele.innerHTML}
+            </div>
+        `;
+
+        // expanded property
+        var name = 'expanded';
+        Object.defineProperty(ele, name, {
+            get: function () {
+                return Utils.toBool(ele.getAttribute(name));
+            },
+            set: function (value) {
+                var b = Utils.toBool(value);
+                this.setAttribute(name, b);
+                ele.style.height = b ? height : minHeight;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ele.expanded        = Utils.toBool(ele.getAttribute('expanded') || true);
+
+        // script
+        var panel = document.getElementById(ele.id);
+        var title = document.getElementById(titleId);
+        title.addEventListener('click', ()=> panel.expanded = !panel.expanded);
         return ele;
     }
 }
