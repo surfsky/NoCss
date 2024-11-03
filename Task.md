@@ -1,9 +1,6 @@
 ------------------------------------------------------
 task
 ------------------------------------------------------
-如何实现完全设置好attribute 后再加载子控件，参考panel.innerHTML，应先完全设置好panel的attribute再执行内部生成语句。这样布局展示速度会最快。
-
-/实现 panel
 实现 resizer = 'all,t,b,l,r'，事实上加上flex就实现了 splitter
 实现 dragger = 'all,h,v'
 重构和简化 NoCss.saveStyle(ele);
@@ -24,6 +21,9 @@ task
 ------------------------------------------------------
 done
 ------------------------------------------------------
+/如何实现完全设置好attribute 后再加载子控件，参考panel.innerHTML，应先完全设置好panel的attribute再执行内部生成语句。这样布局展示速度会最快。
+/实现 panel
+/优化 GlobalStyle，支持自定义的style，写在标签里面就行
 /实现 <GlobalStyle box='border-box' linkColor, fullscreen, rem> 
 /实现button icon 属性：
 /实现所有对象的theme能力，只要设置了themeCls就会上色，此外还会调用自定义的 setTheme() 方法

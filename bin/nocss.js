@@ -691,6 +691,7 @@ class NoCss{
                     if (mutation.addedNodes.length > 0){
                         mutation.addedNodes.forEach((node)=>{
                             if (node instanceof HTMLElement)
+                                node = this.renderCustomTag(node);
                                 this.setCustomAttributes(node);
                         });
                     }
@@ -721,6 +722,20 @@ class NoCss{
         this.customTags[name] = tag;
     }
 
+    /**
+     * Render custom tag.
+     * @param {HTMLElement} ele 
+     * @returns {HTMLElement}
+     */
+    static renderCustomTag(ele){
+        // custome tag render process
+        var render = this.getCustomTag(ele);
+        if (render != null){
+            ele = render.render(ele);
+        }
+        return ele;
+    }
+
     /**Get custom tag render
      * @param {HTMLElement} ele  
      * @returns {Tag}
@@ -730,6 +745,7 @@ class NoCss{
         var render = this.customTags[name];
         return render;
     }
+
 
     //-----------------------------------------------------
     // Attributes
@@ -749,19 +765,15 @@ class NoCss{
     * @param {HTMLElement} ele
     */
     static setCustomAttributes(ele){
-        // custome tag render process
-        var render = this.getCustomTag(ele);
-        if (render != null){
-            ele = render.render(ele);
+        if (ele.getAttributeNames && !ele.hasSetAttributes){
+            var attrs = ele.getAttributeNames();
+            attrs.forEach((attr) => {
+                var val = ele.getAttribute(attr);
+                if (val != null)
+                    this.setCustomAttribute(ele, attr, val);
+            })
         }
-
-        // set attributes
-        var attrs = ele.getAttributeNames();
-        attrs.forEach((attr) => {
-            var val = ele.getAttribute(attr);
-            if (val != null)
-                this.setCustomAttribute(ele, attr, val);
-        })
+        ele.hasSetAttributes = true;
     }
 
     // style keys has 638-645 items.
@@ -1849,6 +1861,7 @@ class GlobalStyle extends Tag {
                 padding: 0px; margin: 0px;
             }
         `;
+        tag.textContent = tag.textContent + ele.innerText;
         document.head.appendChild(tag);
         return ele;
     }    
@@ -1856,6 +1869,9 @@ class GlobalStyle extends Tag {
 
 
 
+/************************************************************
+ * Exapandable panel
+ ***********************************************************/
 class Panel extends Column{
     static {NoCss.registCustomTag('Panel', new Panel());}
 
@@ -1867,26 +1883,38 @@ class Panel extends Column{
      */
     render(ele){
         super.render(ele);
+        NoCss.setCustomAttributes(ele);
+
+        //
         ele.id = NoCss.getId(ele);
         ele.style.overflow = 'hidden';
-
         var titleId = `${ele.id}-title`;
         var bodyId = `${ele.id}-body`;
 
         // common attributes
         var height          = ele.getAttribute('height') || '400px';
         var borderColor     = ele.getAttribute('borderColor') || '#a0a0a0';
+        var titleVisible    = Utils.toBool(ele.getAttribute('titleVisible') || true);
+
+        // render innerHTML without title
+        if (!titleVisible){
+            ele.innerHTML = `
+                <div id='${bodyId}'  width="100%" flex='1' childAnchor='center' overflow='hidden'>
+                    ${ele.innerHTML}
+                </div>
+            `;
+            return;
+        }
+
+        // render innerHTML with title
         var radiusTopLeft   = ele.getAttribute('radius') || '0';
         var radiusTopRight  = ele.getAttribute('radius') || '0';
-
-        // custom attributes
+        var title           = ele.getAttribute('title') || 'Title';
         var titleHeight     = ele.getAttribute('titleHeight') || '40px';
         var titleBgColor    = ele.getAttribute('titleBgColor') || 'lightBlue';
         var titleColor      = ele.getAttribute('titleColor') || 'black';
         var titleBgHoverColor = Utils.getDarkerColor(titleBgColor);
         var minHeight       = ele.getAttribute('minHeight') || titleHeight;
-
-        // render innerHTML
         ele.innerHTML = `
             <div id="${titleId}" width="100%" height="${titleHeight}" 
                 borderBottom="1px solid ${borderColor}" 
@@ -1896,7 +1924,7 @@ class Panel extends Column{
                 radiusTopRight='${radiusTopRight}'
                 childAnchor='center'
                 >
-                Title
+                ${title}
             </div>
             <div id='${bodyId}'  width="100%" flex='1' childAnchor='center' overflow='hidden'>
                 ${ele.innerHTML}
@@ -1914,15 +1942,16 @@ class Panel extends Column{
                 this.setAttribute(name, b);
                 ele.style.height = b ? height : minHeight;
             },
-            enumerable: true,
-            configurable: true
+            //enumerable: true,
+            //configurable: true
         });
-        ele.expanded        = Utils.toBool(ele.getAttribute('expanded') || true);
+        ele.expanded = Utils.toBool(ele.getAttribute('expanded') || true);
 
         // script
         var panel = document.getElementById(ele.id);
-        var title = document.getElementById(titleId);
-        title.addEventListener('click', ()=> panel.expanded = !panel.expanded);
+        var divTitle = document.getElementById(titleId);
+        if (divTitle)
+            divTitle.addEventListener('click', ()=> panel.expanded = !panel.expanded);
         return ele;
     }
 }
