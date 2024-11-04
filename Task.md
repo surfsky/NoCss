@@ -1,11 +1,15 @@
 ------------------------------------------------------
 task
 ------------------------------------------------------
+实现 drag
+    dragArea='body'
+    dragDirection = 'all,h,v'
+    
+
+
 实现 resizer = 'all,t,b,l,r'，事实上加上flex就实现了 splitter
-实现 dragger = 'all,h,v'
 重构和简化 NoCss.saveStyle(ele);
 实现全屏 mask loading 效果
-实现 hoverEffect，把效果写在里面
 
 实现复杂控件
     实现 dialog
@@ -14,14 +18,17 @@ task
     实现各种 popup
 
 
-剥离扩展控件属性的逻辑，需要给标签附上一个onAttributeChanged(name, newValue)方法
-实现扩展属性。如button tag.prototype.__getter(name)
+给控件加上扩张属性
+    方案一：onAttributeChanged(name, newValue)方法。
+    方案二：参考Panel.expanded 属性。
 
 
 ------------------------------------------------------
 done
 ------------------------------------------------------
-/如何实现完全设置好attribute 后再加载子控件，参考panel.innerHTML，应先完全设置好panel的attribute再执行内部生成语句。这样布局展示速度会最快。
+/实现 hoverEffect，把效果写在里面。算了，此项目的目的就是简化95%的事情。
+/实现扩展属性。参考 Panel.expanded. 如button tag.prototype.__getter(name)
+/如何实现完全设置好attribute 后再加载子控件，参考panel.innerHTML，应先完全设置好panel的attribute再执。行内部生成语句。这样布局展示速度会最快。
 /实现 panel
 /优化 GlobalStyle，支持自定义的style，写在标签里面就行
 /实现 <GlobalStyle box='border-box' linkColor, fullscreen, rem> 

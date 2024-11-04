@@ -765,6 +765,9 @@ class NoCss{
     * @param {HTMLElement} ele
     */
     static setCustomAttributes(ele){
+        if (ele == null)
+            return;
+
         if (ele.getAttributeNames && !ele.hasSetAttributes){
             var attrs = ele.getAttributeNames();
             attrs.forEach((attr) => {
