@@ -3,7 +3,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="./nocss.ico" type="image/x-icon" />
     <title>NoCSS.js</title>
-    <script src="../bin/nocss.js" ></script>
+    <script src="./bin/nocss.js" ></script>
     <globalStyle></globalStyle>
 </head>
 
@@ -50,10 +50,11 @@
             </ul>
             <li>Extension</li>
             <ul>
-              <li><a target="iframe1" href="./example/ext-animation.html&show=all">Animation</a></li>
-              <li><a target="iframe1" href="./example/ext-property.html&show=all">Property</a></li>
-              <li><a target="iframe1" href="./example/ext-panel.html&show=all">Panel</a></li>
-              <li><a target="iframe1" href="./example/ext-switch.html&show=all">Switch</a></li>
+              <li><a target="iframe1" show="all" href="./example/ext-animation.html">Animation</a></li>
+              <li><a target="iframe1" show="all" href="./example/ext-property.html">Property</a></li>
+              <li><a target="iframe1" show="all" href="./example/ext-panel.html">Panel</a></li>
+              <li><a target="iframe1" show="all" href="./example/ext-switcher.html">Switcher</a></li>
+              <li><a target="iframe1" show="all" href="./example/ext-groupbutton.html">GroupButton</a></li>
             </ul>
           </ul>
         </column>
@@ -76,18 +77,15 @@
                 event.preventDefault();
 
                 // iframe1 : xxx.html
-                var url = this.href;
-                var index = url.indexOf('&');
-                if (index != -1) 
-                    url = url.slice(0, index);
-                iframe1.src = url;
+                iframe1.src = this.href;
 
                 // iframe2 : code.html?src=xxx.html&show=all
-                url = this.href;
-                var n = url.lastIndexOf('/');
+                var show = this.getAttribute('show') || '';
+                var page = this.href;
+                var n = page.lastIndexOf('/');
                 if (n != -1)
-                    url = url.slice(n+1);
-                iframe2.src = './example/code.html?src=' + url;
+                    page = page.slice(n+1);
+                iframe2.src = `./example/code.html?src=${page}&show=${show}`;
             });
         }
     }

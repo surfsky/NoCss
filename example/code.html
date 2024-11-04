@@ -35,7 +35,6 @@
 
         // 预处理
         content = content.replace(/<!--[\s\S]*?-->/g, ''); // 删除html注释
-        //content = content.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');  // 删除script标签块
         if (show != 'all')
            content = content.replace(/<script(?!.*src)[^>]*>(?:.|\n)*?<\/script>/gi, ''); // 删除script标签块，但保留带src的script标签行
         content = content.replace(/^\s*\n/gm, '');  // 删除空行

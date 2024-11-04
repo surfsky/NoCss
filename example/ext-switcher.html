@@ -1,0 +1,53 @@
+<head>
+    <script src="../bin/nocss.js"></script>
+    <globalStyle></globalStyle>
+</head>
+<body width="100%" height="100%" padding="20px" childMargin="0 0 10px 0">
+    <row gap="20px">
+        <row id="switch1" width="100px" height="40px" radius="20px" 
+            border="1px solid #a0a0a0" 
+            bgcolor="white"
+            checked="false"
+            >
+            <circle width="38px"  order="1" bgcolor="green" border="2px solid white"></circle>
+            <div    height="40px" order="2" flex="1" childAnchor="center">OFF</div>
+        </row>
+
+        <switcher checked="false"></switcher>
+        <switcher checked="true" trueText="YES" falseText="NO" height="30px" width="80px"></switcher>
+    </row>
+</body>
+    
+<script>
+    //-------------------------------------------
+    // switcher button
+    //-------------------------------------------
+    NoCss.registProperties();
+    var divSwitch = document.getElementById('switch1');
+    divSwitch.addEventListener('click', ()=> {
+        var b = divSwitch.checked || false;
+        setChecked(divSwitch, !b, 'green', 'YES', 'NO');
+    });
+
+    /** Set switch value
+     * @param {HTMLElement} ele
+     * @param {boolean} b
+     * @param {string} clr
+    */
+    function setChecked(ele, b, clr, trueText='ON', falseText='OFF'){
+        var divCircle = ele.getElementsByTagName('circle')[0];
+        var divText   = ele.getElementsByTagName('div')[0];
+
+        ele.checked = b;
+        ele.style.backgroundColor = b ? clr : 'white';
+
+        divCircle.style.order       = b ? 2 : 1;
+        divCircle.style.borderColor = b ? clr : 'white';
+        divCircle.style.backgroundColor     = b ? 'white' : clr;
+
+        divText.style.order         = b ? 1 : 2;
+        divText.style.color         = b ? 'white' : clr;
+        divText.innerText           = b ? trueText : falseText;
+    }
+</script>
+    

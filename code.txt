@@ -142,3 +142,20 @@ customElements.define('rectx', RectX, { extends: customNamespace });
     </pre>
 
 
+
+                //var url = this.href;
+                //var index = url.indexOf('&');
+                //if (index != -1) 
+                //    url = url.slice(0, index);
+
+        //content = content.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');  // 删除script标签块
+
+
+
+        <row id="switch2" width="100px" height="40px" radius="20px" 
+            border="1px solid #a0a0a0" 
+            bgcolor="green"
+            >
+            <circle width="38px"  order="2" bgcolor="white" border="2px solid green"></circle>
+            <div    height="40px" order="1" flex="1" childAnchor="center" color="white">ON</div>
+        </row>
