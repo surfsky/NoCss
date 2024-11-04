@@ -1346,18 +1346,42 @@ class Grid extends Tag {
         var cols = ele.getAttribute('columns');
         if (cols != null)  
             this.setColumns(ele, cols);
+        var columnsSmall = ele.getAttribute('columnsSmall');
+        if (columnsSmall != null)  
+            this.setScreenColumns(ele, columnsSmall, '800px');
         var rows = ele.getAttribute('rows');
         if (rows != null)  
             this.setRows(ele, rows);
+        var minColumn = ele.getAttribute('minColumn');
+        if (minColumn != null)  
+            this.setAutoColumn(ele, minColumn);
 
         return ele;
     }
 
+    /**Is certain str is number 
+     * @param {string} str 
+     * @returns {boolean}
+    */
     isNumberString(str) {
         const num = Number(str);
         return !isNaN(num);
     }
 
+    /**Set auto layout grid 
+     * @param {HTMLElement} ele
+     * @param {string} minWidth gridItem min width 
+    */
+    setAutoColumn(ele, minWidth='100px'){
+        // repeat(auto-fit, minmax(200px, 1fr));
+        ele.style.gridTemplateColumns = `repeat(auto-fit, minmax(${minWidth}, 1fr))`;
+    }
+
+    /**
+     * Set grid template columns
+     * @param {HTMLElement} ele  
+     * @param {string|number} val 
+    */
     setColumns(ele, val){
         if (this.isNumberString(val))
             ele.style.gridTemplateColumns = `repeat(${val}, 1fr)`; 
@@ -1365,6 +1389,36 @@ class Grid extends Tag {
             ele.style.gridTemplateColumns = val;
     }
 
+
+    /**
+     * Set grid template columns
+     * @param {HTMLElement} ele  
+     * @param {string|number} val 
+     * @media screen and (max-width: 610px) { .container { grid-template-columns: 200px;}}
+    */
+    setScreenColumns(ele, val, screenWidth='800px'){
+        var gridColumns = val;
+        if (this.isNumberString(val))
+            gridColumns = `repeat(${val}, 1fr)`;
+
+        ele.id = NoCss.getId(ele);
+        var style = document.createElement('style');
+        style.id = ele.id + '-style';
+        style.textContent = `
+            @media screen and (max-width: ${screenWidth}) { 
+                #${ele.id} { grid-template-columns: ${gridColumns} !important; }
+            }
+        `;
+        ele.styleTag = style;
+        NoCss.saveStyle(ele);
+    }
+
+
+    /**
+     * Set grid template rows
+     * @param {HTMLElement} ele  
+     * @param {string|number} val 
+    */
     setRows(ele, val)   { 
         if (this.isNumberString(val))
             ele.style.gridTemplateRows = `repeat(${val}, 1fr)`; 

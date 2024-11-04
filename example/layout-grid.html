@@ -1,0 +1,45 @@
+<html>
+<head>
+    <script src="../bin/nocss.js"></script>
+</head>
+<body>
+    <h2>Grid 4 columns</h2>
+    <grid gap="8px" columns="4">
+        <rect width="100%">1</rect>
+        <rect width="100%">2</rect>
+        <rect width="100%">3</rect>
+        <rect width="100%">4</rect>
+        <rect width="100%" gridColumn="1/3">5</rect>
+        <rect width="100%">6</rect>
+        <rect width="100%">7</rect>
+        <rect width="100%">8</rect>
+    </grid>
+
+
+    <h2>Grid auto same size</h2>
+    <grid gap="8px" minColumn="100px">
+        <rect width="100%">1</rect>
+        <rect width="100%">2</rect>
+        <rect width="100%">3</rect>
+        <rect width="100%">4</rect>
+        <rect width="100%">5</rect>
+        <rect width="100%">6</rect>
+        <rect width="100%">7</rect>
+        <rect width="100%">8</rect>
+    </grid>
+
+    
+    <h2>Grid auto wrap according screen width</h2>
+    <grid gap="8px" columns="200px auto 200px" columnsSmall="auto">
+        <rect width="100%">1</rect>
+        <rect width="100%">2</rect>
+        <rect width="100%">3</rect>
+        <rect width="100%">4</rect>
+        <rect width="100%">5</rect>
+        <rect width="100%">6</rect>
+        <rect width="100%">7</rect>
+        <rect width="100%">8</rect>
+    </grid>
+
+</body>
+</html>

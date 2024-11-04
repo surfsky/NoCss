@@ -1,14 +1,12 @@
 ------------------------------------------------------
 task
 ------------------------------------------------------
-实现 switch
-
 实现 drag
     dragArea='body'
     dragDirection = 'all,h,v'
     
 
-
+再找找有没有reactor 或 vue 那样的方式创建组件
 实现 resizer = 'all,t,b,l,r'，事实上加上flex就实现了 splitter
 重构和简化 NoCss.saveStyle(ele);
 实现全屏 mask loading 效果
@@ -24,9 +22,21 @@ task
     方案二：参考Panel.expanded 属性。
 
 
+
 ------------------------------------------------------
 done
 ------------------------------------------------------
+/优化 grid
+    实现autoColumn，自动容纳，若太挤了，自动换行
+    实现媒体查询，minColumns='200px';
+            /* 媒体查询，当页面宽度小于一定值时，让中间部分换行展示 */
+        @media screen and (max-width: 610px) {
+           .container {
+                grid-template-columns: 200px;
+                grid-template-rows: auto auto;
+                grid-gap: 10px;
+            }
+/实现 switcher
 /实现 hoverEffect，把效果写在里面。算了，此项目的目的就是简化95%的事情。
 /实现扩展属性。参考 Panel.expanded. 如button tag.prototype.__getter(name)
 /如何实现完全设置好attribute 后再加载子控件，参考panel.innerHTML，应先完全设置好panel的attribute再执。行内部生成语句。这样布局展示速度会最快。
