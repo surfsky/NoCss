@@ -1910,6 +1910,9 @@ class GlobalStyle extends Tag {
             a:hover   {color: ${linkHoverColor}}
             a:visited {color: ${linkVisitColor}}
 
+            /* list */
+            ul, li    {list-style-type: none;}
+
             /* rem */
             html { font-size : ${rem} }
         `;

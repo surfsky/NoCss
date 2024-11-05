@@ -5,7 +5,8 @@ task
     dragArea='body'
     dragDirection = 'all,h,v'
 实现 resizer = 'all,t,b,l,r'，事实上加上flex就实现了 splitter
-    
+使用新的标准属性设置语法，并测试
+
 
 模拟实现手机端布局方式
 实现通用的控件尺寸控制：Theme.Control.Height
