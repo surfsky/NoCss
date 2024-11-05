@@ -1553,7 +1553,7 @@ class Button extends Tag {
             tag.setAttribute('key', icon);
             tag.style.color = Theme.current.textLight;
             tag.style.fontSize = '20px';
-            tag.style.marginRight = '4px';
+            tag.style.marginRight = '6px';
             ele.insertBefore(tag, ele.firstChild);
         }
 

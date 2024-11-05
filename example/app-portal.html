@@ -1,15 +1,22 @@
 <html>
 <head>
   <script src="../bin/nocss.js"></script>
+  <globalStyle></globalStyle>
 </head>
-<body width="100%" height="100%" margin="0" padding="0">
-  <grid bgcolor="#007bff" width="100%" height="100%" 
-    columns='200px auto 200px' rows="200px auto" 
-    gap='10px' padding="10px" bgcolor="#2196F3">
-    <div childanchor="center" bgcolor="#FFFFFF90" gridcolumn="1/4">1</div>
-    <div childanchor="center" bgcolor="#FFFFFF90">2</div>
-    <div childanchor="center" bgcolor="#FFFFFF90">3</div>
-    <div childanchor="center" bgcolor="#FFFFFF90">4</div>
+<body bgcolor="#2196F3" >
+  <div width="100%" height="200px" bgcolor="#FFFFFF90" marginBottom="10px" childAnchor="center">
+    HEAD
+  </div>
+  <grid width="100%" height="100%" 
+    columns='200px auto 200px' 
+    columnsSmall="auto"
+    gap='10px'>
+    <div childanchor="center" bgcolor="#FFFFFF90">LEFT</div>
+    <div childanchor="center" bgcolor="#FFFFFF90">MAIN</div>
+    <div childanchor="center" bgcolor="#FFFFFF90">RIGHT</div>
   </grid>
+  <rect fixAnchor="bottomRight" bottom="100px" bgColor="white">
+    Sticky
+  </rect>
 </body>
 </html>

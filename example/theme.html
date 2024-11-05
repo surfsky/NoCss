@@ -7,8 +7,33 @@
     <row width="" height="60px" gap="5px">
         <button click="Theme.setTheme(Theme.themeLight)" themeCls="primary">Light</button>
         <button click="Theme.setTheme(Theme.themeDark)"  themeCls="success">Dark</button>
+        <button click="setCustomTheme()"  themeCls="warning">Custom</button>
         <rect width="100px" height="40px" themeCls="bg">Rect</rect>
     </row>
 </body>
 </html>
+<script>
+    function setCustomTheme(){
+        var theme = new Theme({
+            name        : 'custom',
+            text        : '#f0a0a0',
+            textLight   : 'white',
+            background  : '#400000',
+            link        : 'blue',
+            linkHover   : 'darkblue',
+            linkVisited : 'gray',
+            primary     : 'purple',
+            secondary   : 'pink',
+            success     : 'orange',
+            info        : '#17a2b8',
+            warning     : 'red',
+            danger      : '#dc3545',
+            dark        : '#343a40',
+            light       : '#f8f9fa',
+            //border      : '1px solid #cdcdcd',
+            radius      : '8px',
+        });
+        Theme.setTheme(theme);
+    }
+</script>
 

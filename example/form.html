@@ -6,7 +6,7 @@
     <grid anchor="center" width="600px" columns="4">
         <button themeCls="primary"  icon="math-add"  click="Utils.log('button1', 'INFO', 'logger');" >button1</button>
         <button themeCls="warning"  icon="data-pen"  click="alert('button2')">button2</button>
-        <button themeCls="success"  icon="data-up"  asyncclick="await sleep(2000); Utils.log('button3', 'INFO', 'logger');">button3</button>
+        <button themeCls="success"  icon="data-up" width="200px" asyncclick="await sleep(2000); Utils.log('button3', 'INFO', 'logger');">async button</button>
     </grid>
     <div id="logger"></div>
 </body>

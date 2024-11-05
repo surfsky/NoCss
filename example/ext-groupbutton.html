@@ -1,13 +1,11 @@
 <head>
     <script src="../bin/nocss.js"></script>
-    <style>
-        * {transition: all 0.4s; box-sizing: border-box;}
-    </style>
+    <globalStyle></globalStyle>
 </head>
 <body width="100%" height="100%" padding="20px" childMargin="0 0 10px 0">
     <row id='switch' width="400px" height="40px">
-        <rect id='left'  width="100px" height='40px' radius="20px 0 0 20px" border="1px solid #a0a0a0" bg="lightblue" cursor="pointer">Left</rect>
-        <rect id='right' width="100px" height='40px' radius="0 20px 20px 0" border="1px solid #a0a0a0" bg="" cursor="pointer">Right</rect>
+        <rect id='left'  width="100px" height='40px' radius="20px 0 0 20px" border="1px solid #a0a0a0" borderRight="" bg="green" color="white" cursor="pointer" >Left</rect>
+        <rect id='right' width="100px" height='40px' radius="0 20px 20px 0" border="1px solid #a0a0a0" borderLeft="" bg="" cursor="pointer">Right</rect>
     </row>
 </body>
     
@@ -27,8 +25,10 @@
     divRight.addEventListener('click', ()=> setSwitchValue(false));
     function setSwitchValue(b){
         divSwitch.value = b;
-        divLeft.bgColor = b ? 'lightblue' : 'white';
-        divRight.bgColor = b ? 'white' : 'lightblue';
+        divLeft.bgColor = b ? 'green' : 'white';
+        divLeft.color = b ? 'white' : 'black';
+        divRight.bgColor = b ? 'white' : 'green';
+        divRight.color = b ? 'black' : 'white';
     }
 </script>
     

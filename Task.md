@@ -1,13 +1,16 @@
 ------------------------------------------------------
 task
 ------------------------------------------------------
-实现 drag
+实现 drag/slide
     dragArea='body'
     dragDirection = 'all,h,v'
+实现 resizer = 'all,t,b,l,r'，事实上加上flex就实现了 splitter
     
 
-再找找有没有reactor 或 vue 那样的方式创建组件
-实现 resizer = 'all,t,b,l,r'，事实上加上flex就实现了 splitter
+模拟实现手机端布局方式
+实现通用的控件尺寸控制：Theme.Control.Height
+实现 menu，可自适应横向下拉菜单、左侧展开菜单两种方式，用于适配手机响应式布局
+再找找有没有reactor 或 vue 那样的方式创建组件***
 重构和简化 NoCss.saveStyle(ele);
 实现全屏 mask loading 效果
 
@@ -26,6 +29,11 @@ task
 ------------------------------------------------------
 done
 ------------------------------------------------------
+/custom theme
+/app-portal.html
+/position.html
+/position-anchor.html
+/解决github.io 上https/http的问题。
 /优化 grid
     实现autoColumn，自动容纳，若太挤了，自动换行
     实现媒体查询，minColumns='200px';

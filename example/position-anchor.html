@@ -1,0 +1,46 @@
+<html>
+<head>
+    <script src="../bin/nocss.js"></script>
+    <globalStyle></globalStyle>
+</head>
+<body padding="20px">
+    <row gap="10px">
+        <div width="400px" height="400px" position="relative" border="1px solid gray">
+            <rect anchor="topLeft"     >TL</rect>
+            <rect anchor="top"         >T</rect>
+            <rect anchor="topRight"    >TR</rect>
+            <rect anchor="left"        >L</rect>
+            <rect anchor="center"      >C</rect>
+            <rect anchor="right"       >R</rect>
+            <rect anchor="bottomLeft"  >BL</rect>
+            <rect anchor="bottom"      >B</rect>
+            <rect anchor="bottomRight" >BR</rect>
+            <div  anchor="bottom" bottom="-40px">Anchor</div>
+        </div>
+
+        <div width="400px" height="400px" position="relative" border="1px solid gray">
+            <rect anchor="topLeft"     childAnchor='topLeft' >TL</rect>
+            <rect anchor="top"         childAnchor="top"     >T</rect>
+            <rect anchor="topRight"    childAnchor="topRight">TR</rect>
+            <rect anchor="left"        childAnchor="left"    >L</rect>
+            <rect anchor="center"      childAnchor="center"  >
+                <div>Center</div> 
+                <div>Vertical</div>
+            </rect>
+            <rect anchor="right"       childAnchor="right"       >R</rect>
+            <rect anchor="bottomLeft"  childAnchor="bottomLeft"  >BL</rect>
+            <rect anchor="bottom"      childAnchor="bottom"      >B</rect>
+            <rect anchor="bottomRight" childAnchor="bottomRight" >BR</rect>
+            <div  anchor="bottom" bottom="-40px">ChildAnchor</div>
+        </div>
+
+        <div width="400px" height="400px" position="relative" border="1px solid gray">
+            <rect anchor="center"      childAnchor="centerH" width="200px" childMargin="5px" >
+                <div>Center</div> 
+                <div>Horizontal</div>
+            </rect>
+            <div  anchor="bottom" bottom="-40px">ChildMargin</div>
+        </div>
+    </row>
+</body>
+</html>
