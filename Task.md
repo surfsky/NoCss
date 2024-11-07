@@ -10,7 +10,7 @@ task
 
 模拟实现手机端布局方式
 实现通用的控件尺寸控制：Theme.Control.Height
-实现 menu，可自适应横向下拉菜单、左侧展开菜单两种方式，用于适配手机响应式布局
+实现 menu 自定义标签，可自适应展示：横向下拉菜单、左侧树状菜单两种方式，用于适配手机和web响应式布局
 再找找有没有reactor 或 vue 那样的方式创建组件***
 重构和简化 NoCss.saveStyle(ele);
 实现全屏 mask loading 效果
@@ -21,7 +21,7 @@ task
     实现各种 popup
 
 
-给控件加上扩张属性
+给控件加上属性
     方案一：onAttributeChanged(name, newValue)方法。
     方案二：参考Panel.expanded 属性。
 
@@ -30,6 +30,7 @@ task
 ------------------------------------------------------
 done
 ------------------------------------------------------
+/min.js https://skalman.github.io/UglifyJS-online/
 /custom theme
 /app-portal.html
 /position.html

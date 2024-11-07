@@ -573,11 +573,85 @@ class Utils {
         }, {});
     }
 
+
+
+    /** Ajax
+    * @param {string} method POST|GET
+    * @param {string} url
+    * @param {object} data 
+    * @param {function(response)} callback
+    * @example ajax('GET', url, null, function (response) {console.log('GET请求响应:', response);});
+    */
+    static ajax(method, url, data, callback, fail) {
+        if (method === 'GET' && data)
+            url += '?' + new URLSearchParams(data).toString();
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200)
+                    callback(xhr.responseText);
+                else if (fail != null)
+                    fail();
+            }
+        };
+        xhr.open(method, url, true);
+        if (method === 'GET') {
+            xhr.send();
+        } else {
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send(JSON.stringify(data));
+        }
+    }
+    
+    /** Ajax get
+    * @param {string} url
+    * @param {function(response)} callback
+    * @example ajaxGet(url, function (response) {console.log('GET请求响应:', response);});
+    */
+    static ajaxGet(url, callback, fail=null) {
+        return this.ajax("GET", url, null, callback, fail);
+    }
+
+    /** Ajax post
+    * @param {string} url
+    * @param {function(response)} callback
+    * @example ajaxPost(url, function (response) {console.log('GET请求响应:', response);});
+    */
+    static ajaxPost(url, data, callback, fail=null) {
+        return this.ajax("POST", url, data, callback, fail);
+    }
+    
+
+    /**Async Ajax 
+     * @param {string} method GET|POST
+     * @param {string} url 
+     * @param {object} data valid when method is POST 
+    */
+    static async ajaxAsync(method, url, data=null){
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open(method, url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    const content = xhr.responseText;
+                    resolve(content);
+                } else {
+                    reject(new Error('Failed to fetch the page.'));
+                }
+                }
+            };
+
+            xhr.send(data);
+            });    
+    }
+
     /**Async Ajax get
      * @param {string} url 
     */
     static async get(url) {
-        return await this.ajax('GET', url);
+        return await this.ajaxAsync('GET', url);
     }
 
     /**Async Ajax post
@@ -585,32 +659,9 @@ class Utils {
      * @param {object} data 
     */
     static async post(url, data) {
-        return await this.ajax('GET', url, data);
+        return await this.ajaxAsync('GET', url, data);
     }
-
-    /**Async Ajax 
-     * @param {string} method GET|POST
-     * @param {string} url 
-     * @param {object} data valid when method is POST 
-    */
-    static async ajax(method, url, data=null){
-        return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.open(method, url, true);
-            xhr.onreadystatechange = function () {
-              if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                  const content = xhr.responseText;
-                  resolve(content);
-                } else {
-                  reject(new Error('Failed to fetch the page.'));
-                }
-              }
-            };
-
-            xhr.send(data);
-          });    
-    }
+    
 }
 
 /*************************************************************
