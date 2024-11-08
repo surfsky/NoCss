@@ -1,6 +1,9 @@
 ------------------------------------------------------
 task
 ------------------------------------------------------
+美化 switcher，handler用位移动画后再变色
+/Theme补充参数：实现通用的控件尺寸控制：Theme.controlHeight
+
 实现 drag/slide
     dragArea='body'
     dragDirection = 'all,h,v'
@@ -8,8 +11,8 @@ task
 使用新的标准属性设置语法，并测试
 
 
-模拟实现手机端布局方式
-实现通用的控件尺寸控制：Theme.Control.Height
+模拟实现手机端布局方式，滑屏方式
+
 实现 menu 自定义标签，可自适应展示：横向下拉菜单、左侧树状菜单两种方式，用于适配手机和web响应式布局
 再找找有没有reactor 或 vue 那样的方式创建组件***
 重构和简化 NoCss.saveStyle(ele);

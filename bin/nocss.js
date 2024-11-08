@@ -34,6 +34,26 @@ class Color{
  * Theme
  ***********************************************************/
 class Theme{
+    name          = 'iOSLight';
+    text          = 'black';
+    textLight     = 'white';
+    background    = 'white';
+    link          = 'blue';
+    linkHover     = 'darkblue';
+    linkVisited   = 'gray';
+    primary       = '#007bff';
+    secondary     = '#7633d4';
+    success       = '#28a745';
+    info          = '#17a2b8';
+    warning       = '#ffc107';
+    danger        = '#dc3545';
+    dark          = '#343a40';
+    light         = '#f8f9fa';
+    border        = '1px solid #cdcdcd';
+    radius        = '8px';
+    rowHeight     = '48px';
+    controlHeight = '40px';
+
     constructor(opt) {
         this.name        = opt.name;
         this.text        = opt.text;
@@ -1517,7 +1537,7 @@ class Form extends Tag {
             @media (min-width: 1000px) {.gridForm { grid-template-columns: 100px auto 100px auto; }}
             @media (min-width: 1200px) {.gridForm { grid-template-columns: 100px auto 100px auto 100px auto 100px auto;}}
             @media (min-width: 1400px) {.gridForm { grid-template-columns: 100px auto 100px auto 100px auto 100px auto 100px auto 100px auto;}}
-            .gridForm > * {text-align: left; height: 30px;}
+            .gridForm > * {text-align: left; height: ${Theme.current.controlHeight};}
             .gridForm > label {padding-top: 0px;}
             .gridForm > input {border-radius: 4px; border: 1px solid gray;}
         `;
@@ -2073,37 +2093,39 @@ class Panel extends Column{
 
 /************************************************************
  * Switcher
+    <row id="switch2" width="100px" height="40px" radius="20px" 
+        border="1px solid #a0a0a0" 
+        bgcolor="white"
+        checked="false"
+        position="relative"
+        >
+        <div    flex="1" height="40px" childAnchor="center" color="white">ON</div>
+        <div    flex="1" height="40px" childAnchor="center" color="green">OFF</div>
+        <circle position="absolute" top="0" left="0"  width="38px" bgcolor="green" border="2px solid white"></circle>
+    </row>
  ***********************************************************/
 class Switcher extends Row{
     static {NoCss.registCustomTag('Switcher', new Switcher());}
 
-    /**
-    <row id="switch1" width="100px" height="40px" radius="20px" 
-        border="1px solid #a0a0a0" 
-        bgcolor="white"
-        checked="false"
-        >
-        <circle width="38px"  order="1" bgcolor="green" border="2px solid white"></circle>
-        <div    height="40px" order="2" flex="1" childAnchor="center">OFF</div>
-    </row>
-     */
+    /*** @param {HTMLElement} ele */
     render(ele){
         super.render(ele);
         NoCss.setCustomAttributes(ele);
 
         //
         ele.id = NoCss.getId(ele);
+        ele.style.position = 'relative'; // for children absolute layout.
 
         // common attributes
         var width           = ele.getAttribute('width') || '100px';
-        var height          = ele.getAttribute('height') || '40px';
-        var radius          = ele.getAttribute('radius') || '20px';
+        var height          = ele.getAttribute('height') || Theme.current.controlHeight;
         var border          = ele.getAttribute('border') || "1px solid #a0a0a0";
         var trueText        = ele.getAttribute('trueText') || "ON";
         var falseText       = ele.getAttribute('falseText') || "OFF";
         var checked         = Utils.toBool(ele.getAttribute('checked') || "false");
         var baseColor       = Theme.current.primary;
         var heightNum       = Utils.calcPx(height);
+        var radius          = ele.getAttribute('radius') || heightNum/2 + 'px';
 
         // render innerHTML
         ele.style.width = width;
@@ -2111,16 +2133,17 @@ class Switcher extends Row{
         ele.style.borderRadius = radius;
         ele.style.border = border;
         ele.innerHTML = `
-            <circle id='${ele.id}-circle' width="${heightNum-2}px"  border="2px solid white"></circle>
-            <div    id='${ele.id}-text'   height="${heightNum}px"   flex="1" childAnchor="center">${trueText}</div>
+            <div    flex="1" height="${height}" childAnchor="center" color="white">${trueText}</div>
+            <div    flex="1" height="${height}" childAnchor="center" color="${baseColor}">${falseText}</div>
+            <circle id='${ele.id}-circle' position="absolute" top="0" width="${heightNum-2}px"  border="2px solid white"></circle>
         `;
 
         // event
         ele.addEventListener('click', ()=> {
             var b = ele.checked || false;
-            setChecked(ele, !b, baseColor, trueText, falseText);
+            this.setChecked(ele, !b);
         });
-        this.setChecked(ele, checked, baseColor, trueText, falseText);
+        this.setChecked(ele, checked);
         return ele;
     }
 
@@ -2129,21 +2152,19 @@ class Switcher extends Row{
      * @param {boolean} b
      * @param {string} clr
     */
-    setChecked(ele, b, clr, trueText='ON', falseText='OFF'){
-        //var divCircle = ele.querySelector('circle')[0];
-        //var divText   = ele.querySelector('div')[0];
-        var divCircle = document.getElementById(ele.id + '-circle');
-        var divText   = document.getElementById(ele.id + '-text');
-
+    setChecked(ele, b){
         ele.checked = b;
-        ele.style.backgroundColor           = b ? clr : 'white';
 
-        divCircle.style.order               = b ? 2 : 1;
-        divCircle.style.borderColor         = b ? clr : 'white';
-        divCircle.style.backgroundColor     = b ? 'white' : clr;
+        var clr = Theme.current.primary;
+        var divCircle = document.getElementById(ele.id + '-circle');
+        var left = Utils.calcPx(ele.style.width) - Utils.calcPx(ele.style.height) + 'px';
 
-        divText.style.order                 = b ? 1 : 2;
-        divText.style.color                 = b ? 'white' : clr;
-        divText.innerText                   = b ? trueText : falseText;
+        divCircle.style.left                    = b ? left  :  '0';
+        setTimeout(()=>{
+            divCircle.style.borderColor         = b ? clr : 'white';
+            divCircle.style.backgroundColor     = b ? 'white' : clr;
+            ele.style.backgroundColor           = b ? clr : 'white';
+            ele.style.borderColor               = b ? clr : '#a0a0a0';
+        }, 100);
     }
 }

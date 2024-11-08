@@ -3,16 +3,36 @@
     <globalStyle></globalStyle>
 </head>
 <body width="100%" height="100%" padding="20px" childMargin="0 0 10px 0">
+    <!-- switcher raw -->
     <row gap="20px">
-        <row id="switch1" width="100px" height="40px" radius="20px" 
+        <!-- animate -->
+        <row id="switch2" width="100px" height="40px" radius="20px" 
             border="1px solid #a0a0a0" 
             bgcolor="white"
             checked="false"
+            position="relative"
             >
-            <circle width="38px"  order="1" bgcolor="green" border="2px solid white"></circle>
-            <div    height="40px" order="2" flex="1" childAnchor="center">OFF</div>
+            <div    flex="1" height="40px" childAnchor="center" color="white">ON</div>
+            <div    flex="1" height="40px" childAnchor="center" color="green">OFF</div>
+            <circle position="absolute" top="0" left="0"  width="38px" bgcolor="green" border="2px solid white"></circle>
         </row>
 
+        <!-- ON -->
+        <div id="switchOn" width="100px" height="40px" radius="20px" 
+            border="1px solid green" 
+            bgcolor="green"
+            checked="false"
+            position="relative"
+            >
+            <div    position="absolute" top="0" left="0"  width='50px' height="40px" childAnchor="center" color="white">ON</div>
+            <div    position="absolute" top="0" right="0" width='50px' height="40px" childAnchor="center" color="green">OFF</div>
+            <circle position="absolute" top="0" left="60px" width="38px" bgcolor="white" border="2px solid green"></circle>
+        </div>
+
+    </row>
+
+    <!-- switcher -->
+    <row gap="20px">
         <switcher checked="false"></switcher>
         <switcher checked="true" trueText="YES" falseText="NO" height="30px" width="80px"></switcher>
     </row>
@@ -23,10 +43,16 @@
     // switcher button
     //-------------------------------------------
     NoCss.registProperties();
-    var divSwitch = document.getElementById('switch1');
-    divSwitch.addEventListener('click', ()=> {
-        var b = divSwitch.checked || false;
-        setChecked(divSwitch, !b, 'green', 'YES', 'NO');
+
+
+
+    //-------------------------------------------
+    // switch2
+    //-------------------------------------------
+    var switch2 = document.getElementById('switch2');
+    switch2.addEventListener('click', ()=> {
+        var b = switch2.checked || false;
+        setCheck2(switch2, !b, 'green');
     });
 
     /** Set switch value
@@ -34,20 +60,19 @@
      * @param {boolean} b
      * @param {string} clr
     */
-    function setChecked(ele, b, clr, trueText='ON', falseText='OFF'){
-        var divCircle = ele.getElementsByTagName('circle')[0];
-        var divText   = ele.getElementsByTagName('div')[0];
-
+    function setCheck2(ele, b, clr){
         ele.checked = b;
-        ele.style.backgroundColor = b ? clr : 'white';
+        var divCircle = ele.getElementsByTagName('circle')[0];
+        divCircle.style.left                = b ? '60px'  :  '0';
 
-        divCircle.style.order       = b ? 2 : 1;
-        divCircle.style.borderColor = b ? clr : 'white';
-        divCircle.style.backgroundColor     = b ? 'white' : clr;
-
-        divText.style.order         = b ? 1 : 2;
-        divText.style.color         = b ? 'white' : clr;
-        divText.innerText           = b ? trueText : falseText;
+        setTimeout(()=>{
+            divCircle.style.borderColor         = b ? clr : 'white';
+            divCircle.style.backgroundColor     = b ? 'white' : clr;
+            ele.style.backgroundColor           = b ? clr : 'white';
+            ele.style.borderColor               = b ? clr : '#a0a0a0';
+        }, 100);
     }
+
+    // 效果都不是很好，主要是同时动画，导致闪得厉害。建议先移动圆球，再变更背景色
 </script>
     

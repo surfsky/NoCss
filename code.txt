@@ -159,3 +159,52 @@ customElements.define('rectx', RectX, { extends: customNamespace });
             <circle width="38px"  order="2" bgcolor="white" border="2px solid green"></circle>
             <div    height="40px" order="1" flex="1" childAnchor="center" color="white">ON</div>
         </row>
+
+            <div    id='${ele.id}-text'   height="${heightNum}px"   flex="1" childAnchor="center">${trueText}</div>
+
+        <!-- ROW ON -->
+        <row id="switch1" width="100px" height="40px" radius="20px" 
+            border="1px solid #a0a0a0" 
+            bgcolor="white"
+            checked="false"
+            >
+            <circle width="38px"  order="1" bgcolor="green" border="2px solid white"></circle>
+            <div    height="40px" order="2" flex="1" childAnchor="center">OFF</div>
+        </row>
+
+    //-------------------------------------------
+    // switch1
+    //-------------------------------------------
+    // switch1
+    var switch1 = document.getElementById('switch1');
+    switch1.addEventListener('click', ()=> {
+        var b = switch1.checked || false;
+        setChecked(switch1, !b, 'green', 'YES', 'NO');
+    });
+
+    
+    /** Set switch value
+     * @param {HTMLElement} ele
+     * @param {boolean} b
+     * @param {string} clr
+    */
+    function setChecked(ele, b, clr, trueText='ON', falseText='OFF'){
+        var divCircle = ele.getElementsByTagName('circle')[0];
+        var divText   = ele.getElementsByTagName('div')[0];
+
+        ele.checked = b;
+
+        divCircle.style.order       = b ? 2 : 1;
+        divCircle.style.borderColor = b ? clr : 'white';
+        divCircle.style.backgroundColor     = b ? 'white' : clr;
+
+        divText.style.order         = b ? 1 : 2;
+        divText.style.color         = b ? 'white' : clr;
+        divText.innerText           = b ? trueText : falseText;
+
+        setTimeout(()=>{
+            ele.style.backgroundColor   = b ? clr : 'white';
+            ele.style.borderColor       = b ? clr : '#a0a0a0';
+        }, 100);
+    }
+
