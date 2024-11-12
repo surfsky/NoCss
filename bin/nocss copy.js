@@ -125,6 +125,9 @@ class Theme{
      */
     static setTheme(theme){
         this.current = theme;
+        //document.body.style.transition = 'all 0.4s';
+        //document.body.style.backgroundColor = theme.background;
+        //document.body.style.color = theme.text;
         var eles = Array.from(document.querySelectorAll('*'));
         eles.forEach(ele => {
             if (ele instanceof HTMLElement){
@@ -464,11 +467,11 @@ class Utils {
     //-----------------------------------------
     /** Build random color */
     static getRandomColor() {
-        const r = Math.floor(Math.random() * 256);
-        const g = Math.floor(Math.random() * 256);
-        const b = Math.floor(Math.random() * 256);
-        return `rgb(${r},${g},${b})`;
-    }
+      const r = Math.floor(Math.random() * 256);
+      const g = Math.floor(Math.random() * 256);
+      const b = Math.floor(Math.random() * 256);
+      return `rgb(${r},${g},${b})`;
+  }
 
     /** Build opacity color */
     static getOpacityColor(rawColor, opacity) {
@@ -492,7 +495,7 @@ class Utils {
         } else {
           return `rgb(${r}, ${g}, ${b})`;
         }
-    }
+      }
       
     /** Build darker color */
     static getDarkerColor(color, factor = 0.5) {
@@ -508,7 +511,7 @@ class Utils {
         } else {
           return `rgb(${r}, ${g}, ${b})`;
         }
-    }
+      }
 
     /**Parse color string to object with r,g,b 
      * @param {string} colorStr support blue, #F0F0F0, rgb(...), rgba(...)
@@ -693,9 +696,8 @@ class NoCss{
         //var attrs = ['radius', 'bgcolor'].concat(baseAttrs);
         var names = [
             // alias
-            'width', 'height', 
-            'margin', 'padding', 'top', 'left', 'right', 'bottom', 
-            'gridCol', 'gridRow', 
+            'width', 'height', 'margin', 'padding', 'top', 'left', 'right', 'bottom', 
+            'gridC', 'gridR', 
 
             // basic
             'newClass', 'z', 'visible',
@@ -878,8 +880,8 @@ class NoCss{
             case 'bgposition':        ele.style.backgroundPosition = newValue; break;
             case 'bgsize':            ele.style.backgroundSize = newValue; break;
             case 'events':            ele.style.pointerEvents = newValue; break;
-            case 'gridcolumn':        this.setGridColumn(ele, newValue); break;
-            case 'gridrow':           this.setGridRow(ele, newValue); break;
+            case 'gridc':             this.setGridColumn(ele, newValue); break;
+            case 'gridr':             this.setGridRow(ele, newValue); break;
 
             // common
             case 'newclass':          ele.classList.add(newValue); break; //.setAttribute('class', newValue + ' ' + ele.getAttribute('class')); break;

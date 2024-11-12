@@ -1,15 +1,11 @@
 ------------------------------------------------------
 task
 ------------------------------------------------------
-美化 switcher，handler用位移动画后再变色
-/Theme补充参数：实现通用的控件尺寸控制：Theme.controlHeight
-
 实现 drag/slide
     dragArea='body'
     dragDirection = 'all,h,v'
 实现 resizer = 'all,t,b,l,r'，事实上加上flex就实现了 splitter
 使用新的标准属性设置语法，并测试
-
 
 模拟实现手机端布局方式，滑屏方式
 
@@ -23,17 +19,16 @@ task
     动态创建的对象中的子对象解析有问题，如<toast.row>，考虑用innerHtml方式
     实现各种 popup
 
-
 给控件加上属性
     方案一：onAttributeChanged(name, newValue)方法。
     方案二：参考Panel.expanded 属性。
 
-
-
 ------------------------------------------------------
 done
 ------------------------------------------------------
-/min.js https://skalman.github.io/UglifyJS-online/
+/美化 switcher，handler用位移动画后再变色
+/Theme补充参数：实现通用的控件尺寸控制：Theme.controlHeight
+/minify js:  https://skalman.github.io/UglifyJS-online/
 /custom theme
 /app-portal.html
 /position.html
