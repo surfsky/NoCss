@@ -208,3 +208,48 @@ customElements.define('rectx', RectX, { extends: customNamespace });
         }, 100);
     }
 
+
+        //document.body.style.transition = 'all 0.4s';
+        //document.body.style.backgroundColor = theme.background;
+        //document.body.style.color = theme.text;
+
+    /**
+     * Render custom tag.
+     * @param {HTMLElement} ele 
+     * @returns {HTMLElement}
+     */
+    static renderTag(ele){
+        // custome tag render process
+        var render = this.getTagRender(ele);
+        if (render != null){
+            ele = render.render(ele);
+        }
+        return ele;
+    }
+
+
+        this.styleNames.forEach(k =>{
+            if (k.toLowerCase() == name) {
+                ele.style[k] = newValue;
+                return;  // 有坑，只会跳出forEach方法
+            }
+        });
+
+ || ['id', 'name', 'class', 'style'].includes(name)
+
+ /************************************************************
+ * Color
+ ***********************************************************/
+class RGBA{
+    r = 0;
+    g = 0;
+    b = 0;
+    a = 0;
+
+    constructor(r,g,b,a){
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+    }
+}

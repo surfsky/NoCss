@@ -15,20 +15,6 @@ const Anchor = {
     F:  'fill'
 };
 
-/**Color*/
-class Color{
-    r = 0;
-    g = 0;
-    b = 0;
-    a = 0;
-
-    constructor(r,g,b,a){
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
-    }
-}
 
 /************************************************************
  * Theme
@@ -723,27 +709,12 @@ class NoCss{
         names.forEach((name) =>{
             var self = this;
             HTMLElement.prototype.__defineGetter__(name, function(){
-                //return this.getAttribute(name);
                 return self.getCustomAttribute(this, name);
             });
             HTMLElement.prototype.__defineSetter__(name, function (value) { 
-                this.setAttribute(name, value);
                 self.setCustomAttribute(this, name, value); 
+                this.setAttribute(name, value);
             });
-
-            /*
-            HTMLElement.defineProperty(mydiv, name, {
-                get: function () {
-                    return self.getCustomAttribute(this, name);
-                },
-                set: function (value) {
-                    this.setAttribute(name, value);
-                    self.setCustomAttribute(this, name, value);
-                },
-                enumerable: true,
-                configurable: true
-            });
-            */
         });
     }
 
@@ -755,20 +726,25 @@ class NoCss{
         const observer = new MutationObserver((mutationsList, observer) => {
             for (const mutation of mutationsList) {
                 const ele = mutation.target;
+
+                //
                 if (mutation.type == 'childList'){
                     // when new element created, set it's custom attributes.
-                    if (mutation.addedNodes.length > 0){
-                        mutation.addedNodes.forEach((node)=>{
-                            if (node instanceof HTMLElement)
-                                node = this.renderCustomTag(node);
-                                this.setCustomAttributes(node);
-                        });
-                    }
+                    mutation.addedNodes.forEach((node)=>{
+                        if (node instanceof HTMLElement) {
+                            // render tag
+                            var render = this.getTagRender(node);
+                            if (render != null)
+                                node = render.render(node);
+
+                            // set tag attributes
+                            this.setCustomAttributes(node);
+                        };
+                    });
                 }
                 else if (mutation.type === 'attributes') {
                     var name = mutation.attributeName;
-                    if (name != 'style' && name != 'id')
-                        this.setCustomAttribute(ele, name, ele.getAttribute(name));
+                    this.setCustomAttribute(ele, name, ele.getAttribute(name));
                 }
             }
         });
@@ -780,39 +756,23 @@ class NoCss{
     // Custom tag
     //-----------------------------------------------------
     /**Custom tag renders */
-    static customTags = {};
+    static tagRenders = {};
 
     /**Regist tag render 
      * @param {string} name 
-     * @param {Tag} tag 
+     * @param {Render} tag 
     */
-    static registCustomTag(name, tag){
+    static registTagRender(name, tag){
         name = name.toLowerCase();
-        this.customTags[name] = tag;
-    }
-
-    /**
-     * Render custom tag.
-     * @param {HTMLElement} ele 
-     * @returns {HTMLElement}
-     */
-    static renderCustomTag(ele){
-        // custome tag render process
-        var render = this.getCustomTag(ele);
-        if (render != null){
-            ele = render.render(ele);
-        }
-        return ele;
+        this.tagRenders[name] = tag;
     }
 
     /**Get custom tag render
      * @param {HTMLElement} ele  
-     * @returns {Tag}
+     * @returns {Render}
      */
-    static getCustomTag(ele){
-        var name = ele.tagName.toLowerCase();
-        var render = this.customTags[name];
-        return render;
+    static getTagRender(ele){
+        return this.tagRenders[ele.tagName.toLowerCase()];
     }
 
 
@@ -834,17 +794,13 @@ class NoCss{
     * @param {HTMLElement} ele
     */
     static setCustomAttributes(ele){
-        if (ele == null)
+        if (ele == null || ele.getAttributeNames == null || ele.hasSetAttributes)
             return;
 
-        if (ele.getAttributeNames && !ele.hasSetAttributes){
-            var attrs = ele.getAttributeNames();
-            attrs.forEach((attr) => {
-                var val = ele.getAttribute(attr);
-                if (val != null)
-                    this.setCustomAttribute(ele, attr, val);
-            })
-        }
+        var names = ele.getAttributeNames();
+        names.forEach((name) => {
+            this.setCustomAttribute(ele, name, ele.getAttribute(name));
+        })
         ele.hasSetAttributes = true;
     }
 
@@ -857,13 +813,26 @@ class NoCss{
     * @param {string} newValue 
     */
     static setCustomAttribute(ele, name, newValue){
+        var b = name in ele;  // is property or attribute
+
+        // click is speical
+        if (name == 'click'){
+            this.setClick(ele, newValue);
+            return;
+        }
+
+        // exclude ele's own property
+        //if (newValue==null || (name in ele))
+        if (newValue==null || ['id', 'name', 'class', 'style'].includes(name))
+            return;
+
         // set basic style property (support low/high case)
-        this.styleNames.forEach(k =>{
+        for (const k of this.styleNames){
             if (k.toLowerCase() == name) {
                 ele.style[k] = newValue;
                 return;
             }
-        });
+        }
 
         // set extension attribute value
         switch(name.toLowerCase()){
@@ -912,6 +881,7 @@ class NoCss{
             // event
             case 'click':             this.setClick(ele, newValue); break;
             case 'draggable':         ele.setAttribute('draggable', newValue); break;
+            default:                  break;
         }
     }
 
@@ -1151,7 +1121,7 @@ class NoCss{
     /**
      * Set hover background color
      * @param {HTMLElement} ele
-     * @param {Color} color 
+     * @param {string} color 
      */
     static setHoverBgColor(ele, color){
         var oldColor  = ele.style.backgroundColor;
@@ -1170,7 +1140,7 @@ class NoCss{
     /**
      * Set hover text color
      * @param {HTMLElement} ele
-     * @param {Color} color 
+     * @param {string} color 
      */
     static setHoverTextColor(ele, color){
         var element = ele;
@@ -1190,7 +1160,7 @@ class NoCss{
     /**
      * Set hover opacity color
      * @param {HTMLElement} ele
-     * @param {Color} color 
+     * @param {string} color 
      */
     static setHoverOpacity(ele, opacity){
         var element = ele;
@@ -1247,7 +1217,7 @@ class NoCss{
      * @param {function | string} func 
     */
     static setClick(ele, func){
-        ele.addEventListener('click', (e)=>{
+        ele.addEventListener('click', function (e) {
             e.stopPropagation(); // no send event to other
             eval(func);
         });
@@ -1295,7 +1265,7 @@ class NoCss{
 /*************************************************************
  * Tag render base
  *************************************************************/
-class Tag{
+class Render{
     /**Render tag 
      * @param {HTMLElement} ele Element parsed by page engine.
     */
@@ -1308,8 +1278,8 @@ class Tag{
 /*************************************************************
  * Rect
  *************************************************************/
-class Rect extends Tag{
-    static { NoCss.registCustomTag('Rect', new Rect()); }
+class RectRender extends Render{
+    static { NoCss.registTagRender('Rect', new RectRender()); }
 
     /**@param {HTMLElement} ele */
     render(ele) {
@@ -1328,8 +1298,8 @@ class Rect extends Tag{
 /*************************************************************
  * Circle
  *************************************************************/
-class Circle extends Tag{
-    static { NoCss.registCustomTag('Circle', new Circle()); }
+class CircleRender extends Render{
+    static { NoCss.registTagRender('Circle', new CircleRender()); }
 
     /**@param {HTMLElement} ele */
     render(ele) {
@@ -1353,8 +1323,8 @@ class Circle extends Tag{
  * @example
  *     <row gap="20px">
  ***********************************************************/
-class Row extends Tag {
-    static { NoCss.registCustomTag('Row', new Row());}
+class RowRender extends Render {
+    static { NoCss.registTagRender('Row', new RowRender());}
 
     /**@param {HTMLElement} ele */
     render(ele) {
@@ -1376,8 +1346,8 @@ class Row extends Tag {
  * @example
  *     <column gap="20px">
  ***********************************************************/
-class Column extends Tag {
-    static { NoCss.registCustomTag('Column', new Column());}  // 'col' will collide
+class ColumnRender extends Render {
+    static { NoCss.registTagRender('Column', new ColumnRender());}  // 'col' will collide
 
     /**@param {HTMLElement} ele */
     render(ele) {
@@ -1399,8 +1369,8 @@ class Column extends Tag {
  *     <grid gap="20px" columns='4'>
  *     <grid gap="20px" columns='100px auto 100px'>
  ***********************************************************/
-class Grid extends Tag {
-    static { NoCss.registCustomTag('Grid', new Grid()); }
+class GridRender extends Render {
+    static { NoCss.registTagRender('Grid', new GridRender()); }
 
     /**@param {HTMLElement} ele */
     render(ele) {
@@ -1504,8 +1474,8 @@ class Grid extends Tag {
  * @example
  *     <form>
  ***********************************************************/
-class Form extends Tag {
-    static { NoCss.registCustomTag('Form', new Form()); }
+class FormRender extends Render {
+    static { NoCss.registTagRender('Form', new FormRender()); }
 
     /**@param {HTMLElement} ele */
     render(ele) {
@@ -1550,8 +1520,8 @@ class Form extends Tag {
  * @example
  *     <Container>
  ***********************************************************/
-class Container extends Tag {
-    static { NoCss.registCustomTag('Container', new Container()); }
+class ContainerRender extends Render {
+    static { NoCss.registTagRender('Container', new ContainerRender()); }
 
     /**@param {HTMLElement} ele */
     render(ele) {
@@ -1598,8 +1568,8 @@ class Container extends Tag {
  *     - default theme like bootstrap
  *     - support click disable and become gray
  ***********************************************************/
-class Button extends Tag {
-    static { NoCss.registCustomTag('Button', new Button()); }
+class ButtonRender extends Render {
+    static { NoCss.registTagRender('Button', new ButtonRender()); }
 
     /**@param {HTMLElement} ele */
     render(ele) {
@@ -1800,7 +1770,7 @@ class Tooltip {
 
     /**
      * Show tooltip under element. 
-     * @param {Tag} element 
+     * @param {Render} element 
      * @param {string} attrName
      */
     static show(element, attrName) {
@@ -1858,8 +1828,8 @@ class Tooltip {
  * @example
  *     <img icon="20px">
  ***********************************************************/
-class Image extends Tag {
-    static { NoCss.registCustomTag('Img', new Image());}
+class ImageRender extends Render {
+    static { NoCss.registTagRender('Img', new ImageRender());}
 
     /**@param {HTMLElement} ele */
     render(ele) {
@@ -1891,8 +1861,8 @@ class Image extends Tag {
  * @description
  *     see https://www.iconfont.cn/manage/index?manage_type=myprojects&projectId=1271142
  ***********************************************************/
-class Icon extends Tag {
-    static { NoCss.registCustomTag('Icon', new Icon());}
+class IconRender extends Render {
+    static { NoCss.registTagRender('Icon', new IconRender());}
 
     /**@param {HTMLElement} ele */
     render(ele) {
@@ -1920,8 +1890,8 @@ class Icon extends Tag {
  *     <i class="fa-regular fa-lightbulb" style="color:red"></i>
  *     see https://fontawesome.com.cn/v5
  ***********************************************************/
-class IconAwesome extends Tag {
-    static { NoCss.registCustomTag('Icona', new IconAwesome());}
+class IconAwesomeRender extends Render {
+    static { NoCss.registTagRender('Icona', new IconAwesomeRender());}
 
     /**@param {HTMLElement} ele */
     render(ele) {
@@ -1949,8 +1919,8 @@ class IconAwesome extends Tag {
  *         rem='16px'
  *         />
  ***********************************************************/
-class GlobalStyle extends Tag {
-    static { NoCss.registCustomTag('GlobalStyle', new GlobalStyle());}
+class GlobalStyleRender extends Render {
+    static { NoCss.registTagRender('GlobalStyle', new GlobalStyleRender());}
 
     /**@param {HTMLElement} ele */
     render(ele) {
@@ -2004,8 +1974,8 @@ class GlobalStyle extends Tag {
 /************************************************************
  * Exapandable panel
  ***********************************************************/
-class Panel extends Column{
-    static {NoCss.registCustomTag('Panel', new Panel());}
+class PanelRender extends ColumnRender{
+    static {NoCss.registTagRender('Panel', new PanelRender());}
 
     /**
     <column id='panel' width="400px" height="500px">
@@ -2102,8 +2072,8 @@ class Panel extends Column{
         <circle position="absolute" top="0" left="0"  width="38px" bgcolor="green" border="2px solid white"></circle>
     </row>
  ***********************************************************/
-class Switcher extends Row{
-    static {NoCss.registCustomTag('Switcher', new Switcher());}
+class SwitcherRender extends RowRender{
+    static {NoCss.registTagRender('Switcher', new SwitcherRender());}
 
     /*** @param {HTMLElement} ele */
     render(ele){

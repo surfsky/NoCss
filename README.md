@@ -87,6 +87,7 @@ Custom Tag
 Set attributes/properties by javascript
 
 ```
+    NoCss.registProperties();
     const div = document.createElement('div');
     div.width  = '80px';
     div.height = '40px';
@@ -98,3 +99,8 @@ Set attributes/properties by javascript
     document.body.appendChild(div);
 ```
 
+# VIP Paid services
+
+- Provide training services.
+- Provide more commercial controls.
+- Provide customized versions that are compatible with third-party libraries.

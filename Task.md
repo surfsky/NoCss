@@ -1,15 +1,15 @@
 ------------------------------------------------------
 task
 ------------------------------------------------------
+实现 menu 自定义标签，可自适应展示：横向下拉菜单、左侧树状菜单两种方式，用于适配手机和web响应式布局
+
 实现 drag/slide
     dragArea='body'
     dragDirection = 'all,h,v'
 实现 resizer = 'all,t,b,l,r'，事实上加上flex就实现了 splitter
-使用新的标准属性设置语法，并测试
-
 模拟实现手机端布局方式，滑屏方式
 
-实现 menu 自定义标签，可自适应展示：横向下拉菜单、左侧树状菜单两种方式，用于适配手机和web响应式布局
+
 再找找有没有reactor 或 vue 那样的方式创建组件***
 重构和简化 NoCss.saveStyle(ele);
 实现全屏 mask loading 效果
@@ -21,11 +21,13 @@ task
 
 给控件加上属性
     方案一：onAttributeChanged(name, newValue)方法。
-    方案二：参考Panel.expanded 属性。
+    方案二：创建属性，如 Panel.expanded
 
 ------------------------------------------------------
 done
 ------------------------------------------------------
+/使用新的标准属性设置语法，并测试。不合适。
+/兼容 maptalks，实在不知道哪里出了问题，注释代码试试。后面的render命名出了问题。
 /美化 switcher，handler用位移动画后再变色
 /Theme补充参数：实现通用的控件尺寸控制：Theme.controlHeight
 /minify js:  https://skalman.github.io/UglifyJS-online/
