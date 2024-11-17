@@ -1,7 +1,8 @@
 # About NoCss.js
 
-Write html tag with only attributes. 
-NO css, NO class, NO nodejs. 
+Write html tag with only attributes. NO css, NO class, NO nodejs...
+Just like Tailwind.css, rapidly build modern websites without ever leaving your HTML.
+However, we don't need to remember any class name anymore.
 For example:
 
  ``` html
