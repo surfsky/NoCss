@@ -1,3 +1,11 @@
+/*************************************************************
+ * NoCss.js
+ * Write html tag with only attribute, no CSS, no class anymore.
+ * @author surfsky.github.com 2024-10
+ * @license MIT
+ *************************************************************/
+
+
 /************************************************************
  * Align enum for anchor and childAnchor
  ***********************************************************/
@@ -668,7 +676,7 @@ class Utils {
 }
 
 /*************************************************************
- * NoCss class : Write html with only attribute, no CSS anymore.
+ * NoCss class : Write html tag with only attribute, no CSS anymore.
  * @author surfsky.github.com 2024-10
  *************************************************************/
 class NoCss{
