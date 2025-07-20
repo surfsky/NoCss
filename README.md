@@ -17,6 +17,12 @@ For example:
 </div>
 ```
 
+# Install
+`
+npm install @surfsky2000/nocss
+`
+
+
 See more examples : http://surfsky.github.io/NoCss/
 
 

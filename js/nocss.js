@@ -676,8 +676,7 @@ class Utils {
 }
 
 /*************************************************************
- * NoCss class : Write html tag with only attribute, no CSS anymore.
- * @author surfsky.github.com 2024-10
+ * NoCss core class : Write html tag with only attribute, no CSS anymore.
  *************************************************************/
 class NoCss{
 

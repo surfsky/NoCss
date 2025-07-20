@@ -1,0 +1,15 @@
+# 示例目录
+example/
+example/*
+
+# 开发相关文件
+.git/
+.gitignore
+.DS_Store
+node_modules/
+
+# 其他不需要发布的文件
+*.log
+*.md
+!README.md
+!types/  # 确保不忽略类型文件 

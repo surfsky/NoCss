@@ -1,0 +1,28 @@
+{
+    "name": "@surfsky2000/nocss",
+    "version": "0.9.0",
+    "main": "./js/nocss.js",
+    "types": "./types/nocss.d.ts",
+    "description": "Write html without css.",
+    "author": "surfsky",
+    "license": "MIT",
+    "keywords": [
+      "css",
+      "html",
+      "nocss"
+    ],
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/surfsky/nocss.git"
+    },
+    "directories": {
+      "example": "example"
+    },
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "bugs": {
+      "url": "https://github.com/surfsky/nocss/issues"
+    },
+    "homepage": "https://github.com/surfsky/nocss#readme"
+  }
